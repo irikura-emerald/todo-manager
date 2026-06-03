@@ -21,7 +21,16 @@ Docker + React + Next.js + TypeScript + TailwindCSS + PostgreSQL(Prisma経由) +
     ```
 1. Webブラウザで[localhost:3000](http://localhost:3000)を開いてください
 
-## DBについて
+## VSCodeのCodeIntelliSense対応
+
+プロジェクトルートで以下を実行すると、node_modulesやPrisma Clientが作成され、VS Codeでの依存関係を解決できます。
+
+```bash
+npm install
+npx prisma generate
+```
+
+## DB操作
 
 プロジェクトルートで以下を実行してください。
 ```bash
