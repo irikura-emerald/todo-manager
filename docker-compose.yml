@@ -12,7 +12,9 @@ services:
             - REDIS_URL=${REDIS_URL}
             - TZ=Asia/Tokyo
         volumes:
-            - .:/usr/src/app/${APP_NAME}
+            - ./app:/app/${APP_NAME}/app
+            - ./lib:/app/${APP_NAME}/lib
+            - /app/${APP_NAME}/app/generated
         depends_on:
             - postgres
             - redis

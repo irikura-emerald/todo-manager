@@ -17,9 +17,8 @@ RUN npm install ioredis
 RUN npx prisma init --output ../app/generated/prisma
 
 # 各種実装・設定ファイルを置き換える
-RUN rm -r app/ eslint.config.mjs next.config.ts postcss.config.mjs prisma.config.ts tsconfig.json
-COPY app/ ./app/
-COPY lib/ ./lib/
+# RUN rm -r app/ eslint.config.mjs next.config.ts postcss.config.mjs prisma.config.ts tsconfig.json
+RUN rm eslint.config.mjs next.config.ts postcss.config.mjs prisma.config.ts tsconfig.json
 COPY prisma/ ./prisma/ 
 COPY eslint.config.mjs next.config.ts postcss.config.mjs prisma.config.ts tsconfig.json ./
 
