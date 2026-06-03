@@ -32,12 +32,21 @@ npx prisma generate
 
 ## DB操作
 
-プロジェクトルートで以下を実行してください。
-```bash
-docker compose exec postgres psql -U postgres -d my_db
-```
+- Prisma Studio
+    1. プロジェクトルートで以下を実行してください。
+        ```bash
+        docker compose exec app npx prisma studio --port 5555 --browser none
+        ```
+    2. [http://localhost:5555](http://localhost:5555)を開く
 
-```sql
-select * from "User";
-select * from "Post";
-```
+- psqlコマンド
+    1. プロジェクトルートで以下を実行してください。
+        ```bash
+        docker compose exec postgres psql -U postgres -d my_db
+        ```
+
+    2. 任意のSQLを発行してください。
+        ```sql
+        select * from "User";
+        select * from "Post";
+        ```
