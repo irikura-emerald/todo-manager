@@ -1,5 +1,6 @@
 import { Redis } from "ioredis";
 
-const redis = new Redis(process.env.REDIS_URL, "redis");
+const url = process.env.REDIS_URL as unknown as string;
+const redis = new Redis(url);
 
 export default redis;
