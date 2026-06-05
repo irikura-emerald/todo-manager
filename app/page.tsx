@@ -1,8 +1,9 @@
 import prisma from "@/lib/prisma";
 import redis from "@/lib/redis";
 import Link from "next/link";
+import { User } from "./generated/prisma/client";
 
-async function getUsers() {
+async function getUsers(): Promise<User[]> {
   const KEY = "users";
   const cache = await redis.get(KEY);
   if (cache) {
