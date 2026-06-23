@@ -1,6 +1,8 @@
 import { PrismaClient, Prisma } from "../app/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
+import { faker } from "@faker-js/faker"
+import { TodoListCreateInput } from "@/app/generated/prisma/models";
 
 const adapter = new PrismaPg({
     connectionString: process.env.DATABASE_URL,
@@ -10,42 +12,15 @@ const prisma = new PrismaClient({
     adapter,
 });
 
-const userData: Prisma.UserCreateInput[] = [
-    {
-        name: "Alice",
-        email: "alice@prisma.io",
-        posts: {
-            create: [
-                {
-                    title: "Join the Prisma Discord",
-                    content: "https://pris.ly/discord",
-                    published: true,
-                },
-                {
-                    title: "Prisma on YouTube",
-                    content: "https://pris.ly/youtube",
-                },
-            ],
-        },
-    },
-    {
-        name: "Bob",
-        email: "bob@prisma.io",
-        posts: {
-            create: [
-                {
-                    title: "Follow Prisma on Twitter",
-                    content: "https://www.twitter.com/prisma",
-                    published: true,
-                },
-            ],
-        },
-    },
-];
-
 export async function main() {
-    for (const u of userData) {
-        await prisma.user.create({ data: u });
+    const NUMBER_OF_TODO_LIST = 10;
+
+    for (let orderId = 1; orderId <= NUMBER_OF_TODO_LIST; orderId++) {
+        const todoList: TodoListCreateInput = {
+            name: faker.string.alphanumeric(100),
+            orderId: orderId,
+        };
+        await prisma.todoList.create({ data: todoList });
     }
 }
 
