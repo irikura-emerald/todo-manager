@@ -25,7 +25,9 @@ model Todo {
   detail     String?   @db.VarChar(1000)
   deadline   DateTime
   isDone     Boolean   @default(false)
-  orderId    Int       @unique
+  orderId    Int
   todoList   TodoList? @relation(fields: [todoListId], references: [id])
   todoListId Int?
+
+  @@unique([orderId, todoListId])
 }
