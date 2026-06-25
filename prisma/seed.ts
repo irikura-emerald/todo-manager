@@ -18,40 +18,35 @@ function createTodos(): TodoCreateWithoutTodoListInput[] {
     const to = addDate(new Date(), 7);
 
     const NUMBER_OF_TODO = 10;
-    const todos: TodoCreateWithoutTodoListInput[] = [];
-    for (let orderId = 1; orderId <= NUMBER_OF_TODO; orderId++) {
-        const todo: TodoCreateWithoutTodoListInput = {
+    const todos = createDatas(NUMBER_OF_TODO, orderId => {
+        return {
             name: faker.string.alphanumeric(100),
             detail: faker.string.alphanumeric(1000),
             deadline: faker.date.between({ from, to }),
             orderId,
         };
-        todos.push(todo);
-    }
+    });
     return todos;
 }
 
 function createTodoLists(): TodoListCreateWithoutUserInput[] {
     const NUMBER_OF_TODO_LIST = 10;
-    const todoLists: TodoListCreateWithoutUserInput[] = [];
-    for (let orderId = 1; orderId <= NUMBER_OF_TODO_LIST; orderId++) {
-        const todoList: TodoListCreateWithoutUserInput = {
+    const todoLists = createDatas(NUMBER_OF_TODO_LIST, orderId => {
+        return {
             name: faker.string.alphanumeric(100),
             orderId: orderId,
             todos: {
                 create: createTodos(),
             },
         };
-        todoLists.push(todoList);
-    }
+    });
     return todoLists;
 }
 
 function createUsers(): UserCreateInput[] {
     const NUMBER_OF_USER = 5;
-    const users: UserCreateInput[] = [];
-    for (let i = 0; i < NUMBER_OF_USER; i++) {
-        const user: UserCreateInput = {
+    const users = createDatas(NUMBER_OF_USER, orderId => {
+        return {
             name: faker.person.fullName(),
             email: faker.internet.email(),
             password: faker.internet.password(),
@@ -59,9 +54,17 @@ function createUsers(): UserCreateInput[] {
                 create: createTodoLists(),
             },
         };
-        users.push(user);
-    }
+    });
     return users;
+}
+
+function createDatas<T>(numberOfData: number, createOne: (orderId: number) => T): T[] {
+    const datas: T[] = [];
+    for (let orderId = 1; orderId <= numberOfData; orderId++) {
+        const data = createOne(orderId);
+        datas.push(data);
+    }
+    return datas;
 }
 
 export async function main() {
