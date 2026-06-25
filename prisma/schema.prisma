@@ -20,14 +20,14 @@ model TodoList {
 }
 
 model Todo {
-  id         Int       @id @default(autoincrement())
-  name       String    @db.VarChar(100)
-  detail     String?   @db.VarChar(1000)
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(100)
+  detail     String?  @db.VarChar(1000)
   deadline   DateTime
-  isDone     Boolean   @default(false)
+  isDone     Boolean  @default(false)
   orderId    Int
-  todoList   TodoList? @relation(fields: [todoListId], references: [id])
-  todoListId Int?
+  todoList   TodoList @relation(fields: [todoListId], references: [id])
+  todoListId Int
 
   @@unique([orderId, todoListId])
 }
