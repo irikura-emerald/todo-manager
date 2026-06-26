@@ -50,3 +50,15 @@ npx prisma generate
         select * from "User";
         select * from "Post";
         ```
+
+## 環境変数AUTH_SECRETの変更
+
+1. Auth.jsをインストールしてください
+    ```bash
+    npm install
+    ```
+
+1. 以下を実行後、表示された文字列で.envのAUTH_SECRETを上書きしてください。
+    ```bash
+    npx auth secret
+    ```

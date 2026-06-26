@@ -3,6 +3,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
 import { faker } from "@faker-js/faker"
 import { TodoCreateWithoutTodoListInput, TodoListCreateWithoutUserInput, UserCreateInput } from "@/app/generated/prisma/models";
+import { hash } from "crypto";
 
 const adapter = new PrismaPg({
     connectionString: process.env.DATABASE_URL,
@@ -45,11 +46,12 @@ function createTodoLists(): TodoListCreateWithoutUserInput[] {
 
 function createUsers(): UserCreateInput[] {
     const NUMBER_OF_USER = 5;
-    const users = createDatas(NUMBER_OF_USER, orderId => {
+    const users = createDatas(NUMBER_OF_USER, () => {
         return {
             name: faker.person.fullName(),
             email: faker.internet.email(),
-            password: faker.internet.password(),
+            emailVerified: faker.date.past(),
+            hashedPassword: hash("sha256", "password"),
             todoLists: {
                 create: createTodoLists(),
             },
