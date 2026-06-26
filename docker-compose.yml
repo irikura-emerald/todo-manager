@@ -12,6 +12,7 @@ services:
             - DATABASE_URL=${DATABASE_URL}
             - REDIS_URL=${REDIS_URL}
             - TZ=Asia/Tokyo
+            - AUTH_SECRET=${AUTH_SECRET}
         volumes:
             - ./app:/app/${APP_NAME}/app
             - ./lib:/app/${APP_NAME}/lib
