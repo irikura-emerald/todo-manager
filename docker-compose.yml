@@ -16,6 +16,7 @@ services:
         volumes:
             - ./app:/app/${APP_NAME}/app
             - ./lib:/app/${APP_NAME}/lib
+            - ./components:/app/${APP_NAME}/components
             - /app/${APP_NAME}/app/generated
         depends_on:
             - postgres
