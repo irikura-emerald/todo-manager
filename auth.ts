@@ -21,6 +21,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 },
             },
             authorize: async (credentials) => {
+                // console.log(credentials);
                 const email = credentials.email as string;
                 const hashedPassword = hash("sha256", credentials.password as string);
 
@@ -35,4 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
         })
     ],
+    pages: {
+        signIn: "signin"
+    },
 });
