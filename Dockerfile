@@ -10,7 +10,7 @@ RUN npm ci
 
 # 設定ファイルを配置
 COPY prisma/ ./prisma/ 
-COPY eslint.config.mjs next.config.ts postcss.config.mjs prisma.config.ts tsconfig.json auth.ts proxy.ts yup.jp.ts ./
+COPY eslint.config.mjs next.config.ts postcss.config.mjs prisma.config.ts tsconfig.json proxy.ts yup.jp.ts ./
 
 # Prismaクライアントの作成
 RUN npx prisma generate
