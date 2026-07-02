@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { hash } from "crypto";
+import signInSchema from "./schemas/signin-schema";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
@@ -14,8 +15,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
             authorize: async (credentials) => {
                 // console.log(credentials);
-                const email = credentials.email as string;
-                const hashedPassword = hash("sha256", credentials.password as string);
+                const validatedCredentials = signInSchema.validateSync(credentials);
+                // console.log(validatedCredentials);
+                const email = validatedCredentials.email;
+                const hashedPassword = hash("sha256", validatedCredentials.password);
 
                 const user = await prisma.user.findUnique({
                     where: { email }
