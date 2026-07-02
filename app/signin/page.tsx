@@ -24,7 +24,7 @@ export default function SignInPage() {
         setMessage("ログイン処理中です...");
 
         const response = await signIn(provider, options);
-        console.log(response);
+        // console.log(response);
 
         if (!response?.error) {
             setMessage("ログインに成功しました。TODO管理ページへ移動します。");
