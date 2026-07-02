@@ -7,6 +7,7 @@ import yup from "@/yup.jp";
 import SimpleTextField from "@/components/SimpleTextField";
 import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const schema = yup.object({
     email: yup
@@ -23,6 +24,7 @@ const schema = yup.object({
 
 export default function SignInPage() {
     const router = useRouter();
+    const [message, setMessage] = useState<string>();
 
     const signInUsingCredentials = async (formData: { email: string, password: string }) => {
         const provider = "credentials";
@@ -30,12 +32,19 @@ export default function SignInPage() {
             redirect: false,
             ...formData,
         };
+
+        setMessage("ログイン処理中です...");
+
         const response = await signIn(provider, options);
         console.log(response);
-        if (response?.error) {
-            // エラー発生
-        } else {
+
+        if (!response?.error) {
+            setMessage("ログインに成功しました。TODO管理ページへ移動します。");
             router.push("/");
+        } else if (response.error === "Configuration") {
+            setMessage("EmailかPasswordが違います。");
+        } else {
+            setMessage("想定外のエラーが発生しました。");
         }
     };
 
@@ -63,16 +72,19 @@ export default function SignInPage() {
     };
 
     return (
-        <form onSubmit={handleSubmit(signInUsingCredentials)} method="POST" noValidate>
-            <div>
-                <SimpleTextField {...emailAttributes} />
-            </div>
-            <div>
-                <SimpleTextField {...passwordAttributes} />
-            </div>
-            <div>
-                <Button variant="contained" type="submit">ログイン</Button>
-            </div>
-        </form>
+        <>
+            <form onSubmit={handleSubmit(signInUsingCredentials)} method="POST" noValidate>
+                <div>
+                    <SimpleTextField {...emailAttributes} />
+                </div>
+                <div>
+                    <SimpleTextField {...passwordAttributes} />
+                </div>
+                <div>
+                    <Button variant="contained" type="submit">ログイン</Button>
+                </div>
+            </form>
+            <div>{message}</div>
+        </>
     );
 }
