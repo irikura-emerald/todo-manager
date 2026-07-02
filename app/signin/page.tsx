@@ -8,19 +8,7 @@ import SimpleTextField from "@/components/SimpleTextField";
 import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-const schema = yup.object({
-    email: yup
-        .string()
-        .label("Email")
-        .required()
-        .email(),
-    password: yup
-        .string()
-        .label("Password")
-        .required()
-        .max(100),
-});
+import signInSchema from "@/schemas/signin-schema";
 
 export default function SignInPage() {
     const router = useRouter();
@@ -49,7 +37,7 @@ export default function SignInPage() {
     };
 
     const { register, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(signInSchema),
     });
 
     const basicAttributes = {
