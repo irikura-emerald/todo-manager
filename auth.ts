@@ -21,7 +21,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 const hashedPassword = hash("sha256", validatedCredentials.password);
 
                 const user = await prisma.user.findUnique({
-                    where: { email }
+                    where: { email },
+                    select: {
+                        id: true,
+                        email: true,
+                        hashedPassword: true,
+                    }
                 });
 
                 if (!user || user.hashedPassword !== hashedPassword) {
@@ -33,5 +38,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     ],
     pages: {
         signIn: "signin"
+    },
+    session: {
+        strategy: "jwt",
+    },
+    callbacks: {
+        jwt: ({ token, user }) => {
+            if (user) {
+                token.id = user.id;
+            }
+            return token;
+        },
+        session: ({ session, token }) => {
+            session.user.id = token.id as string;
+            return session;
+        },
     },
 });
