@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@mui/material";
-import yup from "@/yup.jp";
 import SimpleTextField from "@/components/SimpleTextField";
 import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter } from "next/navigation";
