@@ -2,8 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button } from "@mui/material";
-import SimpleTextField from "@/components/SimpleTextField";
+import { Button, TextField } from "@mui/material";
 import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -42,34 +41,30 @@ export default function SignInPage() {
         resolver: yupResolver(signInSchema),
     });
 
-    const basicAttributes = {
-        register,
-        errors,
-        disabled: isFormValid,
-    };
-
     const emailAttributes = {
         label: "Email",
-        name: "email",
         type: "email",
-        ...basicAttributes
+        ...register("email"),
+        error: "email" in errors,
+        helperText: errors.email?.message,
     };
 
     const passwordAttributes = {
         label: "Password",
-        name: "password",
         type: "password",
-        ...basicAttributes
+        ...register("password"),
+        error: "password" in errors,
+        helperText: errors.password?.message,
     };
 
     return (
         <>
             <form onSubmit={handleSubmit(signInUsingCredentials)} method="POST" noValidate>
                 <div>
-                    <SimpleTextField {...emailAttributes} />
+                    <TextField margin="normal" {...emailAttributes} />
                 </div>
                 <div>
-                    <SimpleTextField {...passwordAttributes} />
+                    <TextField margin="normal" {...passwordAttributes} />
                 </div>
                 <div>
                     <Button variant="contained" type="submit" disabled={!isFormValid}>ログイン</Button>
