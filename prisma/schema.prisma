@@ -16,8 +16,8 @@ model User {
   id             String     @id @default(cuid())
   name           String?    @db.VarChar(100)
   email          String     @unique @db.VarChar(100)
+  tell           String     @db.VarChar(100)
   hashedPassword String
-  emailVerified  DateTime?
   todoLists      TodoList[]
 
   createdAt DateTime @default(now())

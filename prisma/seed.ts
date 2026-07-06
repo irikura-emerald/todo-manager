@@ -50,7 +50,7 @@ function createUsers(): UserCreateInput[] {
         return {
             name: faker.person.fullName(),
             email: faker.internet.email(),
-            emailVerified: faker.date.past(),
+            tell: faker.phone.number(),
             hashedPassword: hash("sha256", "password"),
             todoLists: {
                 create: createTodoLists(),
