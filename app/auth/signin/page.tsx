@@ -6,7 +6,7 @@ import { Button, TextField } from "@mui/material";
 import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import signInSchema from "@/schemas/signin-schema";
+import signInValidation from "@/validation/signin-validation";
 
 export default function SignInPage() {
     const router = useRouter();
@@ -38,7 +38,7 @@ export default function SignInPage() {
     };
 
     const { register, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(signInSchema),
+        resolver: yupResolver(signInValidation),
     });
 
     const emailAttributes = {

@@ -1,6 +1,6 @@
 import yup from "@/yup.jp";
 
-const signInSchema = yup.object({
+const signInValidation = yup.object({
     email: yup
         .string()
         .label("Email")
@@ -13,4 +13,4 @@ const signInSchema = yup.object({
         .max(100),
 });
 
-export default signInSchema;
+export default signInValidation;

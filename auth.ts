@@ -2,7 +2,7 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import { hash } from "crypto";
-import signInSchema from "./schemas/signin-schema";
+import signInValidation from "./validation/signin-validation";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
@@ -13,7 +13,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
             authorize: async (credentials) => {
                 // console.log(credentials);
-                const validatedCredentials = signInSchema.validateSync(credentials);
+                const validatedCredentials = signInValidation.validateSync(credentials);
                 // console.log(validatedCredentials);
                 const email = validatedCredentials.email;
                 const hashedPassword = hash("sha256", validatedCredentials.password);
