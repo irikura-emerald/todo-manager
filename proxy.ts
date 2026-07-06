@@ -2,8 +2,9 @@ import { auth } from "@/auth"
 
 export const proxy = auth(request => {
     // console.log(request.auth, request.nextUrl.pathname);
-    if (!request.auth && request.nextUrl.pathname !== "/signin") {
-        const newUrl = new URL("/signin", request.nextUrl.origin)
+    const SIGNIN_PATH = "/auth/signin";
+    if (!request.auth && request.nextUrl.pathname !== SIGNIN_PATH) {
+        const newUrl = new URL(SIGNIN_PATH, request.nextUrl.origin)
         return Response.redirect(newUrl)
     }
 });
