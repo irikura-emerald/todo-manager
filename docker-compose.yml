@@ -19,7 +19,6 @@ services:
             - ./components:/app/${APP_NAME}/components
             - ./validation:/app/${APP_NAME}/validation
             - ./auth.ts:/app/${APP_NAME}/auth.ts
-            - /app/${APP_NAME}/app/generated
         depends_on:
             - postgres
             - redis

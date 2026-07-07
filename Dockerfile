@@ -12,7 +12,4 @@ RUN npm ci
 COPY prisma/ ./prisma/ 
 COPY eslint.config.mjs next.config.ts postcss.config.mjs prisma.config.ts tsconfig.json proxy.ts yup.jp.ts ./
 
-# Prismaクライアントの作成
-RUN npx prisma generate
-
 CMD ["npm", "run", "dev"]

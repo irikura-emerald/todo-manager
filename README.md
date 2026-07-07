@@ -23,11 +23,10 @@ Docker + React + Next.js + TypeScript + TailwindCSS + PostgreSQL(Prisma経由) +
 
 ## VSCode CodeIntelliSense対応
 
-プロジェクトルートで以下を実行すると、node_modulesやPrisma Clientが作成され、VS Codeでの依存関係を解決できます。
+プロジェクトルートで以下を実行すると、node_modulesが作成され、VS Codeでの依存関係を解決できます。
 
 ```bash
 npm install
-npx prisma generate
 ```
 
 ## DB操作
