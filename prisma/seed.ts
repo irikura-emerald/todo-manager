@@ -3,7 +3,6 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
 import { faker } from "@faker-js/faker"
 import { TodoCreateWithoutTodoListInput, TodoListCreateWithoutUserInput, UserCreateInput } from "@/app/generated/prisma/models";
-import { hash } from "crypto";
 import encrypt from "@/lib/encrypt";
 
 const adapter = new PrismaPg({

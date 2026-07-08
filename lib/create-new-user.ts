@@ -1,7 +1,6 @@
 "use server"
 
 import newUserValidation from "@/validation/new-user-validation";
-import { hash } from "crypto";
 import prisma from "./prisma";
 import encrypt from "./encrypt";
 
