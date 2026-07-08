@@ -3,6 +3,7 @@
 import newUserValidation from "@/validation/new-user-validation";
 import { hash } from "crypto";
 import prisma from "./prisma";
+import encrypt from "./encrypt";
 
 type newUserProps = {
     name: string,
@@ -18,7 +19,7 @@ export default async function createNewUser(props: newUserProps) {
             name: validated.name,
             email: validated.email,
             tell: validated.tell,
-            hashedPassword: hash("sha256", validated.password),
+            hashedPassword: encrypt(validated.password),
         }
     });
     return user;
