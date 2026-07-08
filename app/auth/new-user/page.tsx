@@ -1,28 +1,44 @@
 "use client"
 
-import newUserValidation from "@/validation/new-user-validation";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, TextField } from "@mui/material";
 import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import newUserValidation from "@/validation/new-user-validation";
+import createNewUser from "@/lib/create-new-user";
 
 export default function NewUserPage() {
     const router = useRouter();
     const [message, setMessage] = useState<string>();
     const [isFormValid, setIsFormValid] = useState<boolean>(true);
 
-    const signUpUsingCredentials = async (formData: { email: string, password: string }) => {
+    type FormData = {
+        name: string,
+        email: string,
+        tell: string,
+        password: string,
+    };
+    const signUpUsingCredentials = async (formData: FormData) => {
+        // console.log(formData);
+
+        setIsFormValid(false);
+
+        setMessage("ユーザを新規登録中です...");
+        const user = await createNewUser(formData);
+        if (!user) {
+            setIsFormValid(true);
+            setMessage("ユーザの新規登録が失敗しました。");
+        }
+
+        setMessage("ログイン処理中です...");
         const provider = "credentials";
         const options: SignInOptions<false> = {
             redirect: false,
-            ...formData,
+            email: formData.email,
+            password: formData.password,
         };
-
-        setIsFormValid(false);
-        setMessage("ログイン処理中です...");
-
         const response = await signIn(provider, options);
         // console.log(response);
 
@@ -41,26 +57,58 @@ export default function NewUserPage() {
         resolver: yupResolver(newUserValidation),
     });
 
+    const nameAttributes = {
+        label: "Name",
+        type: "text",
+        ...register("name"),
+        error: "name" in errors,
+        helperText: errors.name?.message,
+    };
+
+    const emailAttributes = {
+        label: "Email",
+        type: "email",
+        ...register("email"),
+        error: "email" in errors,
+        helperText: errors.email?.message,
+    };
+
+    const tellAttributes = {
+        label: "Tell",
+        type: "tel",
+        ...register("tell"),
+        error: "tell" in errors,
+        helperText: errors.tell?.message,
+    };
+
+    const passwordAttributes = {
+        label: "Password",
+        type: "password",
+        ...register("password"),
+        error: "password" in errors,
+        helperText: errors.password?.message,
+    };
+
     return (
-        <form>
-            <div>
-                <TextField margin="normal" />
-            </div>
-            <div>
-                <TextField margin="normal" />
-            </div>
-            <div>
-                <TextField margin="normal" />
-            </div>
-            <div>
-                <TextField margin="normal" />
-            </div>
-            <div>
-                <TextField margin="normal" />
-            </div>
-            <div>
-                <Button variant="contained" type="submit">新規登録</Button>
-            </div>
-        </form>
+        <>
+            <form onSubmit={handleSubmit(signUpUsingCredentials)}>
+                <div>
+                    <TextField margin="normal" {...nameAttributes} />
+                </div>
+                <div>
+                    <TextField margin="normal"  {...emailAttributes} />
+                </div>
+                <div>
+                    <TextField margin="normal"  {...tellAttributes} />
+                </div>
+                <div>
+                    <TextField margin="normal"  {...passwordAttributes} />
+                </div>
+                <div>
+                    <Button variant="contained" type="submit" disabled={!isFormValid}>新規登録</Button>
+                </div>
+            </form>
+            <div>{message}</div>
+        </>
     );
 }

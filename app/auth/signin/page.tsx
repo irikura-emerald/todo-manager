@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, TextField } from "@mui/material";
+import { Button, Link, TextField } from "@mui/material";
 import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -71,6 +71,7 @@ export default function SignInPage() {
                 </div>
             </form>
             <div>{message}</div>
+            <Link href="/auth/new-user">新規登録はこちらから</Link>
         </>
     );
 }
