@@ -63,6 +63,7 @@ export default function NewUserPage() {
         ...register("name"),
         error: "name" in errors,
         helperText: errors.name?.message,
+        autoComplete: "name",
     };
 
     const emailAttributes = {
@@ -71,6 +72,7 @@ export default function NewUserPage() {
         ...register("email"),
         error: "email" in errors,
         helperText: errors.email?.message,
+        autoComplete: "email",
     };
 
     const tellAttributes = {
@@ -79,6 +81,7 @@ export default function NewUserPage() {
         ...register("tell"),
         error: "tell" in errors,
         helperText: errors.tell?.message,
+        autoComplete: "tel",
     };
 
     const passwordAttributes = {
@@ -87,6 +90,7 @@ export default function NewUserPage() {
         ...register("password"),
         error: "password" in errors,
         helperText: errors.password?.message,
+        autoComplete: "new-password",
     };
 
     return (
