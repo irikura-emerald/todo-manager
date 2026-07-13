@@ -9,7 +9,7 @@ export async function getAuthenticatedUser(...columns: string[]) {
     const session = await auth();
     const email = session?.user?.email as string;
     const where = { email };
-    console.log(where);
+    // console.log(where);
 
     const select: Record<string, boolean> = {};
     select.id = true;
