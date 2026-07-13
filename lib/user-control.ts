@@ -63,10 +63,31 @@ export async function updateTell(tell: string): Promise<boolean> {
     return isSuccessful;
 }
 
-export async function updatePassword(password: string): Promise<boolean> {
-    const column = "hashedPassword";
-    const data = encrypt(password);
-    const validation = passwordValidation;
-    const isSuccessful = updateData(column, data, validation);
+type updatePasswordProps = {
+    currentPassword: string,
+    newPassword: string,
+};
+export async function updatePassword(passwords: updatePasswordProps): Promise<boolean> {
+    const session = await auth();
+    const email = session?.user?.email as string;
+
+    const validated = await passwordValidation.validate(passwords);
+    const hashedCurrentPassword = encrypt(validated.currentPassword);
+    const hashedNewPassword = encrypt(validated.newPassword);
+
+    const user = await prisma.user.findUnique({
+        where: { email },
+        select: { hashedPassword: true }
+    });
+    const isMatched = user && (user.hashedPassword === hashedCurrentPassword);
+    if (!isMatched) {
+        return false;
+    }
+
+    const updatedUser = await prisma.user.update({
+        where: { email },
+        data: { hashedPassword: hashedNewPassword },
+    });
+    const isSuccessful = updatedUser ? true : false;
     return isSuccessful;
 }

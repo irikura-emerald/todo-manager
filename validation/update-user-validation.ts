@@ -38,12 +38,26 @@ export const tellValidation: UpdateUserValidation = yup.object({
         .max(100),
 });
 
-export const passwordValidation: UpdateUserValidation = yup.object({
-    value: yup
+export type PasswordValidation = yup.ObjectSchema<{
+    currentPassword: string;
+    newPassword: string;
+}, yup.AnyObject, {
+    currentPassword: undefined;
+    newPassword: undefined;
+}, "">;
+export const passwordValidation: PasswordValidation = yup.object({
+    currentPassword: yup
         .string()
-        .label("Password")
+        .label("Current Password")
+        .required()
+        .min(15)
+        .max(100),
+    newPassword: yup
+        .string()
+        .label("New Password")
         .required()
         .min(15)
         .max(100)
-        .matches(HALF_WIDTH_ALPHANUMERIC_CHARACTERS),
+        .matches(HALF_WIDTH_ALPHANUMERIC_CHARACTERS)
+        .notOneOf([yup.ref("currentPassword")], "同じパスワードは設定できません。"),
 });
