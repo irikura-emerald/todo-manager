@@ -50,7 +50,6 @@ export const passwordValidation: PasswordValidation = yup.object({
         .string()
         .label("Current Password")
         .required()
-        .min(15)
         .max(100),
     newPassword: yup
         .string()
