@@ -1,25 +1,33 @@
 "use client"
 
-import { getAuthenticatedUser, updateTell } from "@/lib/user-control";
-import { tellValidation } from "@/validation/update-user-validation";
+import { getAuthenticatedUser } from "@/lib/user-control";
+import { UpdateUserValidation } from "@/validation/update-user-validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-const label = "Tell";
-const type = "tel";
-const column = "tell";
-const autoComplete = "tel";
-const validation = tellValidation;
-const updateColumn = updateTell;
+export type BaseFormProps = {
+    label: string,
+    type: string,
+    column: string,
+    autoComplete: string,
+    validation: UpdateUserValidation,
+    updateColumn: (value: string) => Promise<boolean>,
+    processPreupdate?: () => boolean,
+    processPostupdate?: (isSuccessful: boolean) => void,
+};
 
-export default function TellForm() {
+export default function BaseForm({
+    label, type, column, autoComplete, validation, updateColumn,
+    processPreupdate = () => true,
+    processPostupdate = () => null,
+}: BaseFormProps) {
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
     const [message, setMessage] = useState<string>("読み込み中…");
 
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm({
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm<{ value: string }>({
         resolver: yupResolver(validation),
     });
 
@@ -37,7 +45,7 @@ export default function TellForm() {
                 setMessage("");
             });
     };
-    useEffect(loadFromDataBase, [setValue]);
+    useEffect(loadFromDataBase, [setValue, column, label]);
 
     const attributes = {
         label,
@@ -51,11 +59,18 @@ export default function TellForm() {
     };
 
     async function update({ value }: { value: string }) {
+        const isUpdatable = processPreupdate();
+        if (!isUpdatable) {
+            return;
+        }
+
         setIsFormValid(false);
         setMessage("変更中…");
         const isSuccessful = await updateColumn(value);
         setMessage(isSuccessful ? "変更に成功しました。" : "変更に失敗しました。");
         setIsFormValid(true);
+
+        processPostupdate(isSuccessful);
     }
 
     return (
