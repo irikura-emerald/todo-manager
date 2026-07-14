@@ -4,6 +4,27 @@ import { emailValidation, nameValidation, passwordValidation, tellValidation, Up
 import prisma from "./prisma";
 import { auth } from "@/auth";
 import encrypt from "./encrypt";
+import newUserValidation from "@/validation/new-user-validation";
+
+type newUserProps = {
+    name: string,
+    email: string,
+    tell: string,
+    password: string,
+};
+
+export async function createNewUser(props: newUserProps) {
+    const validated = await newUserValidation.validate(props);
+    const user = prisma.user.create({
+        data: {
+            name: validated.name,
+            email: validated.email,
+            tell: validated.tell,
+            hashedPassword: encrypt(validated.password),
+        }
+    });
+    return user;
+}
 
 export async function getAuthenticatedUser(...columns: string[]) {
     const session = await auth();

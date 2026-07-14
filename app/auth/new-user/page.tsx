@@ -7,7 +7,7 @@ import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import newUserValidation from "@/validation/new-user-validation";
-import createNewUser from "@/lib/create-new-user";
+import { createNewUser } from "@/lib/user-control";
 
 export default function NewUserPage() {
     const router = useRouter();
