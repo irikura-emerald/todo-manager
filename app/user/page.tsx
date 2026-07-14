@@ -1,5 +1,6 @@
 "use client"
 
+import Navigation from "@/components/Navigation";
 import BaseForm, { BaseFormProps } from "@/components/user-item-form/BaseForm";
 import PasswordForm from "@/components/user-item-form/PasswordForm";
 import { deleteAuthenticatedUser, updateEmail, updateName, updateTell } from "@/lib/user-control";
@@ -57,6 +58,7 @@ export default function UserPage() {
 
     return (
         <>
+            <Navigation />
             <SessionProvider>
                 <BaseForm {...nameFormProps} />
                 <BaseForm {...emailFormProps} />
