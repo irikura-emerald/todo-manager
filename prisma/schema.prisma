@@ -29,7 +29,7 @@ model TodoList {
   name    String @db.VarChar(100)
   orderId Int
   todos   Todo[]
-  user    User   @relation(fields: [userId], references: [id])
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
 
   createdAt DateTime @default(now())
@@ -45,7 +45,7 @@ model Todo {
   deadline   DateTime
   isDone     Boolean  @default(false)
   orderId    Int
-  todoList   TodoList @relation(fields: [todoListId], references: [id])
+  todoList   TodoList @relation(fields: [todoListId], references: [id], onDelete: Cascade)
   todoListId Int
 
   createdAt DateTime @default(now())

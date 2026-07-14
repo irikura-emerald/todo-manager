@@ -24,6 +24,18 @@ export async function getAuthenticatedUser(...columns: string[]) {
     return user
 }
 
+export async function deleteAuthenticatedUser() {
+    const session = await auth();
+    const email = session?.user?.email as string;
+    const where = { email };
+    // console.log(where);
+
+    const user = prisma.user.delete({ where });
+    console.log(await user);
+
+    return user;
+}
+
 async function updateData(column: string, data: string, validation: UpdateUserValidation): Promise<boolean> {
     const session = await auth();
     const email = session?.user?.email as string;

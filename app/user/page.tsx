@@ -2,7 +2,7 @@
 
 import BaseForm, { BaseFormProps } from "@/components/user-item-form/BaseForm";
 import PasswordForm from "@/components/user-item-form/PasswordForm";
-import { updateEmail, updateName, updateTell } from "@/lib/user-control";
+import { deleteAuthenticatedUser, updateEmail, updateName, updateTell } from "@/lib/user-control";
 import { emailValidation, nameValidation, tellValidation } from "@/validation/update-user-validation";
 import { Button } from "@mui/material";
 import { SessionProvider, signOut } from "next-auth/react";
@@ -44,6 +44,17 @@ export default function UserPage() {
         updateColumn: updateTell,
     };
 
+    const deleteUser = () => {
+        const isDeletable = confirm("本当に退会しますか？\n名前・Email・Tell・Todoなどすべて削除され、復元できなくなります。");
+        if (!isDeletable) {
+            return;
+        }
+        deleteAuthenticatedUser()
+            .then(() => {
+                signOut();
+            });
+    };
+
     return (
         <>
             <SessionProvider>
@@ -52,7 +63,7 @@ export default function UserPage() {
                 <BaseForm {...tellFormProps} />
                 <PasswordForm />
             </SessionProvider>
-            <Button>退会</Button>
+            <Button onClick={deleteUser}>退会</Button>
         </>
     );
 }
