@@ -51,7 +51,7 @@ export default function BaseForm({
         label,
         type,
         ...register("value"),
-        error: column in errors,
+        error: "value" in errors,
         helperText: errors.value?.message as string | undefined,
         autoComplete,
         defaultValue: "----",

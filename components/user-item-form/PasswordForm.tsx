@@ -20,7 +20,7 @@ export default function PasswordForm() {
         label: "Current Password",
         type: "password",
         ...register("currentPassword"),
-        error: "oldPassword" in errors,
+        error: "currentPassword" in errors,
         helperText: errors.currentPassword?.message as string | undefined,
         autoComplete: "current-password",
         disabled: !isFormValid,
