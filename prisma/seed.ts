@@ -20,10 +20,13 @@ function createTodos(): TodoCreateWithoutTodoListInput[] {
 
     const NUMBER_OF_TODO = 10;
     const todos = createDatas(NUMBER_OF_TODO, orderId => {
+        const deadline = faker.date.between({ from, to });
+        deadline.setSeconds(0);
+        deadline.setMilliseconds(0);
         return {
             name: faker.string.alphanumeric(100),
             detail: faker.string.alphanumeric(1000),
-            deadline: faker.date.between({ from, to }),
+            deadline,
             orderId,
         };
     });
