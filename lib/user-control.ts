@@ -52,7 +52,7 @@ export async function deleteAuthenticatedUser() {
     // console.log(where);
 
     const user = prisma.user.delete({ where });
-    console.log(await user);
+    // console.log(await user);
 
     return user;
 }
