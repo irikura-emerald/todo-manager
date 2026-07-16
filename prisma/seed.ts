@@ -27,6 +27,7 @@ function createTodos(): TodoCreateWithoutTodoListInput[] {
             name: faker.string.alphanumeric(100),
             detail: faker.string.alphanumeric(1000),
             deadline,
+            isDone: faker.datatype.boolean(),
             orderId,
         };
     });
