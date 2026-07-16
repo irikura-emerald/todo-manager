@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <>
       <Navigation />
-      <div className="flex flex-wrap">
+      <div className="flex overflow-x-scroll">
         {
           todoLists.map(todoList => {
             // console.log(todoList);
