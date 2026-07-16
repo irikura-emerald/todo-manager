@@ -46,7 +46,6 @@ export function TodoBox({ todo }: TodoBoxProps) {
     };
 
     const isDoneAttributes = {
-        label: "完了",
         type: "checkbox",
         ...register("isDone"),
         error: "isDone" in errors,
