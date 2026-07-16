@@ -214,7 +214,7 @@ export type TodoGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type TodoGroupByOutputType = {
   id: number
   name: string
-  detail: string | null
+  detail: string
   deadline: Date
   isDone: boolean
   orderId: number
@@ -249,7 +249,7 @@ export type TodoWhereInput = {
   NOT?: Prisma.TodoWhereInput | Prisma.TodoWhereInput[]
   id?: Prisma.IntFilter<"Todo"> | number
   name?: Prisma.StringFilter<"Todo"> | string
-  detail?: Prisma.StringNullableFilter<"Todo"> | string | null
+  detail?: Prisma.StringFilter<"Todo"> | string
   deadline?: Prisma.DateTimeFilter<"Todo"> | Date | string
   isDone?: Prisma.BoolFilter<"Todo"> | boolean
   orderId?: Prisma.IntFilter<"Todo"> | number
@@ -262,7 +262,7 @@ export type TodoWhereInput = {
 export type TodoOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  detail?: Prisma.SortOrderInput | Prisma.SortOrder
+  detail?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
   isDone?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
@@ -279,7 +279,7 @@ export type TodoWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.TodoWhereInput[]
   NOT?: Prisma.TodoWhereInput | Prisma.TodoWhereInput[]
   name?: Prisma.StringFilter<"Todo"> | string
-  detail?: Prisma.StringNullableFilter<"Todo"> | string | null
+  detail?: Prisma.StringFilter<"Todo"> | string
   deadline?: Prisma.DateTimeFilter<"Todo"> | Date | string
   isDone?: Prisma.BoolFilter<"Todo"> | boolean
   orderId?: Prisma.IntFilter<"Todo"> | number
@@ -292,7 +292,7 @@ export type TodoWhereUniqueInput = Prisma.AtLeast<{
 export type TodoOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  detail?: Prisma.SortOrderInput | Prisma.SortOrder
+  detail?: Prisma.SortOrder
   deadline?: Prisma.SortOrder
   isDone?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
@@ -312,7 +312,7 @@ export type TodoScalarWhereWithAggregatesInput = {
   NOT?: Prisma.TodoScalarWhereWithAggregatesInput | Prisma.TodoScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Todo"> | number
   name?: Prisma.StringWithAggregatesFilter<"Todo"> | string
-  detail?: Prisma.StringNullableWithAggregatesFilter<"Todo"> | string | null
+  detail?: Prisma.StringWithAggregatesFilter<"Todo"> | string
   deadline?: Prisma.DateTimeWithAggregatesFilter<"Todo"> | Date | string
   isDone?: Prisma.BoolWithAggregatesFilter<"Todo"> | boolean
   orderId?: Prisma.IntWithAggregatesFilter<"Todo"> | number
@@ -323,7 +323,7 @@ export type TodoScalarWhereWithAggregatesInput = {
 
 export type TodoCreateInput = {
   name: string
-  detail?: string | null
+  detail?: string
   deadline: Date | string
   isDone?: boolean
   orderId: number
@@ -335,7 +335,7 @@ export type TodoCreateInput = {
 export type TodoUncheckedCreateInput = {
   id?: number
   name: string
-  detail?: string | null
+  detail?: string
   deadline: Date | string
   isDone?: boolean
   orderId: number
@@ -346,7 +346,7 @@ export type TodoUncheckedCreateInput = {
 
 export type TodoUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  detail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detail?: Prisma.StringFieldUpdateOperationsInput | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   orderId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -358,7 +358,7 @@ export type TodoUpdateInput = {
 export type TodoUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  detail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detail?: Prisma.StringFieldUpdateOperationsInput | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   orderId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -370,7 +370,7 @@ export type TodoUncheckedUpdateInput = {
 export type TodoCreateManyInput = {
   id?: number
   name: string
-  detail?: string | null
+  detail?: string
   deadline: Date | string
   isDone?: boolean
   orderId: number
@@ -381,7 +381,7 @@ export type TodoCreateManyInput = {
 
 export type TodoUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  detail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detail?: Prisma.StringFieldUpdateOperationsInput | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   orderId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -392,7 +392,7 @@ export type TodoUpdateManyMutationInput = {
 export type TodoUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  detail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detail?: Prisma.StringFieldUpdateOperationsInput | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   orderId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -512,7 +512,7 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type TodoCreateWithoutTodoListInput = {
   name: string
-  detail?: string | null
+  detail?: string
   deadline: Date | string
   isDone?: boolean
   orderId: number
@@ -523,7 +523,7 @@ export type TodoCreateWithoutTodoListInput = {
 export type TodoUncheckedCreateWithoutTodoListInput = {
   id?: number
   name: string
-  detail?: string | null
+  detail?: string
   deadline: Date | string
   isDone?: boolean
   orderId: number
@@ -563,7 +563,7 @@ export type TodoScalarWhereInput = {
   NOT?: Prisma.TodoScalarWhereInput | Prisma.TodoScalarWhereInput[]
   id?: Prisma.IntFilter<"Todo"> | number
   name?: Prisma.StringFilter<"Todo"> | string
-  detail?: Prisma.StringNullableFilter<"Todo"> | string | null
+  detail?: Prisma.StringFilter<"Todo"> | string
   deadline?: Prisma.DateTimeFilter<"Todo"> | Date | string
   isDone?: Prisma.BoolFilter<"Todo"> | boolean
   orderId?: Prisma.IntFilter<"Todo"> | number
@@ -575,7 +575,7 @@ export type TodoScalarWhereInput = {
 export type TodoCreateManyTodoListInput = {
   id?: number
   name: string
-  detail?: string | null
+  detail?: string
   deadline: Date | string
   isDone?: boolean
   orderId: number
@@ -585,7 +585,7 @@ export type TodoCreateManyTodoListInput = {
 
 export type TodoUpdateWithoutTodoListInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  detail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detail?: Prisma.StringFieldUpdateOperationsInput | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   orderId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -596,7 +596,7 @@ export type TodoUpdateWithoutTodoListInput = {
 export type TodoUncheckedUpdateWithoutTodoListInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  detail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detail?: Prisma.StringFieldUpdateOperationsInput | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   orderId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -607,7 +607,7 @@ export type TodoUncheckedUpdateWithoutTodoListInput = {
 export type TodoUncheckedUpdateManyWithoutTodoListInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  detail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  detail?: Prisma.StringFieldUpdateOperationsInput | string
   deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDone?: Prisma.BoolFieldUpdateOperationsInput | boolean
   orderId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -687,7 +687,7 @@ export type $TodoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     name: string
-    detail: string | null
+    detail: string
     deadline: Date
     isDone: boolean
     orderId: number

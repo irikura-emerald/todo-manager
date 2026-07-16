@@ -41,7 +41,7 @@ model TodoList {
 model Todo {
   id         Int      @id @default(autoincrement())
   name       String   @db.VarChar(100)
-  detail     String?  @db.VarChar(1000)
+  detail     String   @default("") @db.VarChar(1000)
   deadline   DateTime
   isDone     Boolean  @default(false)
   orderId    Int
