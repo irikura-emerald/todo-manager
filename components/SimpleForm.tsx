@@ -36,14 +36,7 @@ export default function SimpleForm({ label, type, id, value, validation, update 
         setValues({ id, value });
     }
 
-    const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
-
-    function submit(formData: FormValues) {
-        clearTimeout(timeoutId);
-        console.log(timeoutId);
-        update(formData);
-        // console.log("onSubmit");
-    }
+    const [, setTimeoutId] = useState<NodeJS.Timeout>();
 
     function change(formData: FormValues) {
         const timeout = 3000;
@@ -67,7 +60,7 @@ export default function SimpleForm({ label, type, id, value, validation, update 
     }
 
     return (
-        <form onSubmit={handleSubmit(submit)} onChange={handleSubmit(change)}>
+        <form onChange={handleSubmit(change)}>
             <input type="hidden" {...register("id")} />
             <TextField margin="normal" {...valueAttributes} />
         </form>
