@@ -3,7 +3,7 @@
 import Navigation from "@/components/Navigation";
 import TodoListBox from "@/components/TodoListBox";
 import { createTodoList, getTodoList, TodoList } from "@/lib/todolist-control";
-import todoListCreateValidation from "@/validation/todolist-validation";
+import { todoListCreateValidation } from "@/validation/todolist-validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
