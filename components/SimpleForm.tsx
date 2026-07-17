@@ -17,7 +17,7 @@ type SimpleFormProps = {
     id: number,
     value: string,
     validation: SimpleValidation,
-    update: ({ value }: { id: number, value: string }) => void,
+    update: ({ id, value }: { id: number, value: string }) => void,
 };
 
 export default function SimpleForm({ label, type, id, value, validation, update }: SimpleFormProps) {
