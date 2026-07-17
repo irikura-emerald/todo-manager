@@ -1,4 +1,4 @@
-import { TodoList, updateTodoList } from "@/lib/todolist-control";
+import { TodoList, updateTodoListName } from "@/lib/todolist-control";
 import { TodoBox } from "./TodoBox";
 import { Button } from "@mui/material";
 import SimpleForm from "./SimpleForm";
@@ -20,7 +20,7 @@ export default function TodoListBox({ todoList }: TodoListBoxProps) {
     }, [todoList]);
 
     function update({ id, value }: { id: number, value: string }) {
-        updateTodoList(id, value);
+        updateTodoListName(id, value);
     }
 
     const simpleFormProps = {
