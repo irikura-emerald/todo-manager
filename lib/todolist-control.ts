@@ -20,7 +20,7 @@ export type TodoList = {
     todos: Todo[],
 };
 
-export async function getTodoList(): Promise<TodoList[]> {
+export async function getTodoLists(): Promise<TodoList[]> {
     const session = await auth();
     const email = session?.user?.email as string;
     const todoLists = await prisma.todoList.findMany({
