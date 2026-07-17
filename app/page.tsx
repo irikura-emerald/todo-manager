@@ -2,7 +2,7 @@
 
 import Navigation from "@/components/Navigation";
 import TodoListBox from "@/components/TodoListBox";
-import { createTodoList, getTodoList, TodoList } from "@/lib/todolist-control";
+import { createTodoList, getTodoLists, TodoList } from "@/lib/todolist-control";
 import { todoListCreateValidation } from "@/validation/todolist-validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, TextField } from "@mui/material";
@@ -13,7 +13,7 @@ export default function Home() {
   const [todoLists, setTodoLists] = useState<TodoList[]>([]);
 
   useEffect(() => {
-    getTodoList()
+    getTodoLists()
       .then(todoLists => {
         // console.log(todoLists);
         setTodoLists(todoLists);
