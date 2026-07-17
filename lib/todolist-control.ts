@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import prisma from "./prisma";
+import { todoListCreateValidation } from "@/validation/todolist-validation";
 
 export type Todo = {
     id: number,
@@ -52,6 +53,8 @@ export async function getTodoList(): Promise<TodoList[]> {
 }
 
 export async function createTodoList(name: string): Promise<TodoList> {
+    todoListCreateValidation.validateSync({ name });
+
     const session = await auth();
     const email = session?.user?.email as string;
 
