@@ -21,11 +21,13 @@ type SimpleFormProps = {
 };
 
 export default function SimpleForm({ label, type, id, value, validation, update }: SimpleFormProps) {
-    const { register, handleSubmit, setValues, formState: { errors } } = useForm<{ id: number, value: string }>({
+    const { register, handleSubmit, setValues, getValues, formState: { errors } } = useForm<{ id: number, value: string }>({
         resolver: yupResolver(validation),
     });
 
-    setValues({ id, value });
+    if (!getValues("value")) {
+        setValues({ id, value });
+    }
 
     const valueAttributes = {
         label,
