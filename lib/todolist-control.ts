@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import prisma from "./prisma";
-import { todoListCreateValidation, todoListUpdateValidation } from "@/validation/todolist-validation";
+import { todoListCreateValidation, todoListUpdateValidationForServer } from "@/validation/todolist-validation";
 import { Todo } from "./todo-control";
 
 export type TodoList = {
@@ -88,7 +88,7 @@ export async function testTodoListOwner(id: number): Promise<boolean> {
 }
 
 export async function updateTodoListName(id: number, name: string): Promise<boolean> {
-    todoListUpdateValidation.validate({ id, value: name });
+    todoListUpdateValidationForServer.validate({ id, value: name });
     await prisma.todoList.update({
         where: { id },
         data: { name },

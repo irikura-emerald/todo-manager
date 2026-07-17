@@ -2,7 +2,7 @@ import { TodoList, updateTodoListName } from "@/lib/todolist-control";
 import { TodoBox } from "./TodoBox";
 import { Button } from "@mui/material";
 import SimpleForm from "./SimpleForm";
-import { todoListUpdateValidation } from "@/validation/todolist-validation";
+import { todoListUpdateValidationForClient } from "@/validation/todolist-validation";
 import { useEffect, useState } from "react";
 import { getTodos, Todo } from "@/lib/todo-control";
 
@@ -28,7 +28,7 @@ export default function TodoListBox({ todoList }: TodoListBoxProps) {
         type: "text",
         id: todoList.id,
         value: todoList.name,
-        validation: todoListUpdateValidation,
+        validation: todoListUpdateValidationForClient,
         update,
     }
 
