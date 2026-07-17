@@ -27,11 +27,6 @@ export default function SimpleForm({ label, type, id, value, validation, update 
 
     setValues({ id, value });
 
-    const idAttributes = {
-        type: "hidden",
-        ...register("id"),
-    };
-
     const valueAttributes = {
         label,
         type,
@@ -42,7 +37,7 @@ export default function SimpleForm({ label, type, id, value, validation, update 
 
     return (
         <form onSubmit={handleSubmit(update)}>
-            <TextField {...idAttributes} />
+            <input type="hidden" {...register("id")} />
             <TextField margin="normal" {...valueAttributes} />
         </form>
     );
