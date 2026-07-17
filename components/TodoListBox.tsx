@@ -3,11 +3,22 @@ import { TodoBox } from "./TodoBox";
 import { Button } from "@mui/material";
 import SimpleForm from "./SimpleForm";
 import { todoListUpdateValidation } from "@/validation/todolist-validation";
+import { useEffect, useState } from "react";
+import { getTodos, Todo } from "@/lib/todo-control";
 
 type TodoListBoxProps = {
     todoList: TodoList
 };
 export default function TodoListBox({ todoList }: TodoListBoxProps) {
+    const [todos, setTodos] = useState<Todo[]>([]);
+
+    useEffect(() => {
+        getTodos(todoList.id)
+            .then(todos => {
+                setTodos(todos);
+            });
+    }, [todoList]);
+
     function update({ id, value }: { id: number, value: string }) {
         updateTodoList(id, value);
     }
@@ -26,7 +37,7 @@ export default function TodoListBox({ todoList }: TodoListBoxProps) {
             <SimpleForm {...simpleFormProps} />
             <Button>削除</Button>
             <div>
-                {todoList.todos.map(todo => {
+                {todos.map(todo => {
                     return (
                         <TodoBox key={todo.id} todo={todo} />
                     );

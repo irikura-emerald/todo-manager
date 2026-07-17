@@ -1,4 +1,4 @@
-import { Todo } from "@/lib/todolist-control";
+import { Todo } from "@/lib/todo-control";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";

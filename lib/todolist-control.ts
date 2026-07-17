@@ -3,15 +3,7 @@
 import { auth } from "@/auth";
 import prisma from "./prisma";
 import { todoListCreateValidation, todoListUpdateValidation } from "@/validation/todolist-validation";
-
-export type Todo = {
-    id: number,
-    name: string,
-    detail: string,
-    deadline: Date,
-    isDone: boolean,
-    orderId: number,
-};
+import { Todo } from "./todo-control";
 
 export type TodoList = {
     id: number,
@@ -31,19 +23,6 @@ export async function getTodoLists(): Promise<TodoList[]> {
             id: true,
             name: true,
             orderId: true,
-            todos: {
-                select: {
-                    id: true,
-                    name: true,
-                    detail: true,
-                    deadline: true,
-                    isDone: true,
-                    orderId: true,
-                },
-                orderBy: {
-                    orderId: "asc",
-                }
-            },
         },
         orderBy: {
             orderId: "asc"
