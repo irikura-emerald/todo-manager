@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import prisma from "./prisma";
-import { todoListCreateValidation } from "@/validation/todolist-validation";
+import { todoListCreateValidation, todoListUpdateValidation } from "@/validation/todolist-validation";
 
 export type Todo = {
     id: number,
@@ -89,4 +89,31 @@ export async function createTodoList(name: string): Promise<TodoList> {
         select: { id: true, name: true, orderId: true, todos },
     });
     return newTodoList;
+}
+
+export async function testTodoListOwner(id: number): Promise<boolean> {
+    const session = await auth();
+    const email = session?.user?.email;
+    const todoList = await prisma.todoList.findUnique({
+        select: {
+            user: {
+                select: {
+                    email: true
+                }
+            }
+        },
+        where: { id },
+    });
+    const isTodoListMine = todoList && todoList.user.email === email ? true : false;
+    return isTodoListMine;
+}
+
+export async function updateTodoList(id: number, name: string): Promise<boolean> {
+    todoListUpdateValidation.validate({ id, value: name });
+    await prisma.todoList.update({
+        where: { id },
+        data: { name },
+    });
+    const isSuccessful = true;
+    return isSuccessful;
 }
