@@ -1,7 +1,7 @@
 import yup from "@/yup.jp";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { TextField } from "@mui/material";
-import { useState } from "react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 
 export type SimpleValidation = yup.ObjectSchema<{
@@ -36,19 +36,20 @@ export default function SimpleForm({ label, type, id, value, validation, update 
         setValues({ id, value });
     }
 
-    const [, setTimeoutId] = useState<NodeJS.Timeout>();
-
-    function change(formData: FormValues) {
-        const timeout = 3000;
-        const newTimeoutId = setTimeout(() => {
-            update(formData);
-            // console.log("onChange");
-        }, timeout);
-        setTimeoutId(oldTimeoutId => {
-            // console.log({ old: oldTimeoutId, new: newTimeoutId });
-            clearTimeout(oldTimeoutId);
-            return newTimeoutId;
-        });
+    const timeoutId = useRef<NodeJS.Timeout>(setTimeout(() => null));
+    function change(event: React.ChangeEvent) {
+        function onValid(formData: FormValues) {
+            const timeout = 3000;
+            const newTimeoutId = setTimeout(() => {
+                update(formData);
+                // console.log("onChange");
+            }, timeout);
+            // console.log({ old: timeoutId.current, new: newTimeoutId });
+            clearTimeout(timeoutId.current);
+            timeoutId.current = newTimeoutId;
+        }
+        const processHandler = handleSubmit(onValid);
+        processHandler(event);
     }
 
     const valueAttributes = {
@@ -60,7 +61,7 @@ export default function SimpleForm({ label, type, id, value, validation, update 
     }
 
     return (
-        <form onChange={handleSubmit(change)}>
+        <form onChange={change}>
             <input type="hidden" {...register("id")} />
             <TextField margin="normal" {...valueAttributes} />
         </form>
