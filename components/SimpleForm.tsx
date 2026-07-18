@@ -27,14 +27,9 @@ export type FormValues = {
 };
 
 export default function SimpleForm({ label, type, id, value, validation, update }: SimpleFormProps) {
-    const { register, handleSubmit, setValues, getValues, formState: { errors } } = useForm<FormValues>({
+    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
         resolver: yupResolver(validation),
     });
-
-    const formData = getValues();
-    if (!formData.id && !formData.value) {
-        setValues({ id, value });
-    }
 
     const timeoutId = useRef<NodeJS.Timeout>(setTimeout(() => null));
 
@@ -90,11 +85,12 @@ export default function SimpleForm({ label, type, id, value, validation, update 
         ...register("value"),
         error: "value" in errors,
         helperText: errors.value?.message,
-    }
+        defaultValue: value,
+    };
 
     return (
         <form onSubmit={submit} onChange={change}>
-            <input type="hidden" {...register("id")} />
+            <input type="hidden" value={id} {...register("id")} />
             <TextField margin="normal" {...valueAttributes} />
         </form>
     );
