@@ -19,17 +19,13 @@ export default function TodoListBox({ todoList }: TodoListBoxProps) {
             });
     }, [todoList]);
 
-    function update({ id, value }: { id: number, value: string }):Promise<boolean> {
-        return updateTodoListName(id, value);
-    }
-
     const simpleFormProps = {
         label: "リスト名",
         type: "text",
         id: todoList.id,
         value: todoList.name,
         validation: todoListUpdateValidationForClient,
-        update,
+        update: updateTodoListName,
     }
 
     return (

@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import prisma from "./prisma";
 import { todoListCreateValidation, todoListUpdateValidationForServer } from "@/validation/todolist-validation";
 import { Todo } from "./todo-control";
+import { FormValues } from "@/components/SimpleForm";
 
 export type TodoList = {
     id: number,
@@ -87,11 +88,11 @@ export async function testTodoListOwner(id: number): Promise<boolean> {
     return isTodoListMine;
 }
 
-export async function updateTodoListName(id: number, name: string): Promise<boolean> {
-    todoListUpdateValidationForServer.validate({ id, value: name });
+export async function updateTodoListName({ id, value }: FormValues): Promise<boolean> {
+    todoListUpdateValidationForServer.validate({ id, value });
     await prisma.todoList.update({
         where: { id },
-        data: { name },
+        data: { name: value },
     });
     const isSuccessful = true;
     return isSuccessful;

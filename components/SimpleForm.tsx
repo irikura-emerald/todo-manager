@@ -21,7 +21,7 @@ type SimpleFormProps = {
     update: ({ id, value }: { id: number, value: string }) => Promise<boolean>,
 };
 
-type FormValues = {
+export type FormValues = {
     id: number,
     value: string,
 };
