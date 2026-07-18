@@ -1,7 +1,7 @@
 import yup from "@/yup.jp";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { TextField } from "@mui/material";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export type SimpleValidation = yup.ObjectSchema<{
@@ -13,12 +13,12 @@ export type SimpleValidation = yup.ObjectSchema<{
 }, "">;
 
 type SimpleFormProps = {
-    label?: string,
+    label: string,
     type: string,
     id: number,
     value: string,
     validation: SimpleValidation,
-    update: ({ id, value }: { id: number, value: string }) => void,
+    update: ({ id, value }: { id: number, value: string }) => Promise<boolean>,
 };
 
 type FormValues = {
@@ -38,13 +38,17 @@ export default function SimpleForm({ label, type, id, value, validation, update 
 
     const timeoutId = useRef<NodeJS.Timeout>(setTimeout(() => null));
 
+    const [labelWithMessage, setLabelWithMessage] = useState<string>(label);
+    const labelTimeoutId = useRef<NodeJS.Timeout>(setTimeout(() => null));
+
     function submit(event: React.SubmitEvent) {
         function onValid(formData: FormValues) {
             clearTimeout(timeoutId.current);
-            console.log({ old: timeoutId.current });
+            // console.log({ old: timeoutId.current });
 
-            update(formData);
-            console.log("onSubmit");
+            const response = update(formData);
+            // console.log("onSubmit");
+            showLabelMessage(response);
         }
         const processHandler = handleSubmit(onValid);
         processHandler(event);
@@ -54,10 +58,11 @@ export default function SimpleForm({ label, type, id, value, validation, update 
         function onValid(formData: FormValues) {
             const timeout = 3000;
             const newTimeoutId = setTimeout(() => {
-                update(formData);
-                console.log("onChange");
+                const response = update(formData);
+                // console.log("onChange");
+                showLabelMessage(response);
             }, timeout);
-            console.log({ old: timeoutId.current, new: newTimeoutId });
+            // console.log({ old: timeoutId.current, new: newTimeoutId });
             clearTimeout(timeoutId.current);
             timeoutId.current = newTimeoutId;
         }
@@ -65,8 +70,22 @@ export default function SimpleForm({ label, type, id, value, validation, update 
         processHandler(event);
     }
 
+    function showLabelMessage(response: Promise<boolean>) {
+        response.then(isSuccessful => {
+            setLabelWithMessage(() => {
+                clearTimeout(labelTimeoutId.current);
+                const timeout = 3000;
+                labelTimeoutId.current = setTimeout(() => {
+                    setLabelWithMessage(label);
+                }, timeout);
+                const status = isSuccessful ? "saved" : "failed to save";
+                return `${label}(${status})`;
+            });
+        });
+    }
+
     const valueAttributes = {
-        label,
+        label: labelWithMessage,
         type,
         ...register("value"),
         error: "value" in errors,

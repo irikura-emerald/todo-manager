@@ -19,8 +19,8 @@ export default function TodoListBox({ todoList }: TodoListBoxProps) {
             });
     }, [todoList]);
 
-    function update({ id, value }: { id: number, value: string }) {
-        updateTodoListName(id, value);
+    function update({ id, value }: { id: number, value: string }):Promise<boolean> {
+        return updateTodoListName(id, value);
     }
 
     const simpleFormProps = {
