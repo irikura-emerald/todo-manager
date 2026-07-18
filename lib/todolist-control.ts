@@ -13,9 +13,17 @@ export type TodoList = {
     todos: Todo[],
 };
 
-export async function getTodoLists(): Promise<TodoList[]> {
+async function getEmailOfSession(): Promise<string> {
     const session = await auth();
-    const email = session?.user?.email as string;
+    const email = session?.user?.email;
+    if (!email) {
+        throw new Error("セッションユーザのEmail取得に失敗しました。");
+    }
+    return email;
+}
+
+export async function getTodoLists(): Promise<TodoList[]> {
+    const email = await getEmailOfSession();
     const todoLists = await prisma.todoList.findMany({
         where: {
             user: { email },
@@ -35,8 +43,7 @@ export async function getTodoLists(): Promise<TodoList[]> {
 export async function createTodoList(name: string): Promise<TodoList> {
     todoListCreateValidation.validateSync({ name });
 
-    const session = await auth();
-    const email = session?.user?.email as string;
+    const email = await getEmailOfSession();
 
     const { _max: { orderId: maxOfOrderId } } = await prisma.todoList.aggregate({
         _max: { orderId: true },
@@ -72,8 +79,7 @@ export async function createTodoList(name: string): Promise<TodoList> {
 }
 
 export async function testTodoListOwner(id: number): Promise<boolean> {
-    const session = await auth();
-    const email = session?.user?.email;
+    const email = await getEmailOfSession();
     const todoList = await prisma.todoList.findUnique({
         select: {
             user: {
