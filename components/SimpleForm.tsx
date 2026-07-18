@@ -37,14 +37,27 @@ export default function SimpleForm({ label, type, id, value, validation, update 
     }
 
     const timeoutId = useRef<NodeJS.Timeout>(setTimeout(() => null));
+
+    function submit(event: React.SubmitEvent) {
+        function onValid(formData: FormValues) {
+            clearTimeout(timeoutId.current);
+            console.log({ old: timeoutId.current });
+
+            update(formData);
+            console.log("onSubmit");
+        }
+        const processHandler = handleSubmit(onValid);
+        processHandler(event);
+    }
+
     function change(event: React.ChangeEvent) {
         function onValid(formData: FormValues) {
             const timeout = 3000;
             const newTimeoutId = setTimeout(() => {
                 update(formData);
-                // console.log("onChange");
+                console.log("onChange");
             }, timeout);
-            // console.log({ old: timeoutId.current, new: newTimeoutId });
+            console.log({ old: timeoutId.current, new: newTimeoutId });
             clearTimeout(timeoutId.current);
             timeoutId.current = newTimeoutId;
         }
@@ -61,7 +74,7 @@ export default function SimpleForm({ label, type, id, value, validation, update 
     }
 
     return (
-        <form onChange={change}>
+        <form onSubmit={submit} onChange={change}>
             <input type="hidden" {...register("id")} />
             <TextField margin="normal" {...valueAttributes} />
         </form>
