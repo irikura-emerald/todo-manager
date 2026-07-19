@@ -31,14 +31,12 @@ export default function SimpleForm({ label, type, id, value, validation, update 
         resolver: yupResolver(validation),
     });
 
-    const timeoutId = useRef<NodeJS.Timeout>(setTimeout(() => null));
-
-    const [labelWithMessage, setLabelWithMessage] = useState<string>(label);
-    const labelTimeoutId = useRef<NodeJS.Timeout>(setTimeout(() => null));
+    //#region フォームのSubmit・Changeイベントにおけるvalueの更新処理
+    const timeoutIdForUpdating = useRef<NodeJS.Timeout>(setTimeout(() => null));
 
     function submit(event: React.SubmitEvent) {
         function onValid(formData: FormValues) {
-            clearTimeout(timeoutId.current);
+            clearTimeout(timeoutIdForUpdating.current);
             // console.log({ old: timeoutId.current });
 
             const response = update(formData);
@@ -58,19 +56,23 @@ export default function SimpleForm({ label, type, id, value, validation, update 
                 showLabelMessage(response);
             }, timeout);
             // console.log({ old: timeoutId.current, new: newTimeoutId });
-            clearTimeout(timeoutId.current);
-            timeoutId.current = newTimeoutId;
+            clearTimeout(timeoutIdForUpdating.current);
+            timeoutIdForUpdating.current = newTimeoutId;
         }
         const processHandler = handleSubmit(onValid);
         processHandler(event);
     }
+    //#endregion
 
+    //#region value更新時のlabel制御
+    const [labelWithMessage, setLabelWithMessage] = useState<string>(label);
+    const timeoutIdForLabel = useRef<NodeJS.Timeout>(setTimeout(() => null));
     function showLabelMessage(response: Promise<boolean>) {
         response.then(isSuccessful => {
             setLabelWithMessage(() => {
-                clearTimeout(labelTimeoutId.current);
+                clearTimeout(timeoutIdForLabel.current);
                 const timeout = 3000;
-                labelTimeoutId.current = setTimeout(() => {
+                timeoutIdForLabel.current = setTimeout(() => {
                     setLabelWithMessage(label);
                 }, timeout);
                 const status = isSuccessful ? "saved" : "failed to save";
@@ -78,6 +80,7 @@ export default function SimpleForm({ label, type, id, value, validation, update 
             });
         });
     }
+    //#endregion
 
     const valueAttributes = {
         label: labelWithMessage,
