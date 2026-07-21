@@ -2,8 +2,10 @@
 
 import Navigation from "@/components/Navigation";
 import TodoListBox from "@/components/TodoListBox";
-import { createTodoList, getTodoLists, TodoList } from "@/lib/todolist-control";
+import { createTodoList, getTodoLists, moveTodoList, TodoList } from "@/lib/todolist-control";
 import { todoListCreateValidation } from "@/validation/todolist-validation";
+import { closestCenter, DndContext, DragEndEvent } from "@dnd-kit/core";
+import { arrayMove, horizontalListSortingStrategy, SortableContext } from "@dnd-kit/sortable";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -40,16 +42,45 @@ export default function Home() {
     reset({ name: "" });
   }
 
+  function handleDragEnd({ active, over }: DragEndEvent) {
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const idFrom = active.id as number;
+    const idTo = over.id as number;
+    moveTodoList(idFrom, idTo);
+
+    // console.log({ from: idFrom, to: idTo, todoLists });
+    setTodoLists((todoLists) => {
+
+      const indexFrom = todoLists.findIndex(todoList => todoList.id == idFrom);
+      const indexTo = todoLists.findIndex(todoList => todoList.id == idTo);
+      if (indexFrom == -1 || indexTo == -1) {
+        return todoLists;
+      }
+
+      const movedTodoLists = arrayMove(todoLists, indexFrom, indexTo);
+      movedTodoLists.forEach((todoList, index) => todoList.orderId = index + 1);
+      // console.log(movedTodoLists.map(todoList => { return { id: todoList.id, orderId: todoList.orderId }; }));
+      return movedTodoLists;
+    });
+  }
+
   return (
     <>
       <Navigation />
       <div className="flex">
-        {
-          todoLists.map(todoList => {
-            // console.log(todoList);
-            return <TodoListBox key={todoList.id} todoList={todoList} />;
-          })
-        }
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={todoLists} strategy={horizontalListSortingStrategy}>
+            {
+              todoLists.map(todoList => {
+                // console.log(todoList);
+                return <TodoListBox key={todoList.id} todoList={todoList} />;
+              })
+            }
+          </SortableContext>
+        </DndContext>
 
         <form onSubmit={handleSubmit(addTodoList)} className="min-w-120">
           <TextField margin="normal" {...todoListNameAttributes} />

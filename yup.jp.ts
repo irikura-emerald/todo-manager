@@ -6,6 +6,7 @@ export const HALF_WIDTH_ALPHANUMERIC_CHARACTERS = /^[0-9a-zA-Z]+$/;
 const jpLocale: yup.LocaleObject = {
     mixed: {
         required: param => `${param.label}は必須です。`,
+        notOneOf: param => `${param.label}は${param.originalPath}と違う値にしてください。`,
     },
     string: {
         max: param => `${param.label}は${param.max}文字以内にしてください。`,

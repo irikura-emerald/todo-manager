@@ -29,3 +29,25 @@ function getTodoListUpdateValidation(isForServer: boolean) {
 }
 export const todoListUpdateValidationForClient = getTodoListUpdateValidation(false);
 export const todoListUpdateValidationForServer = getTodoListUpdateValidation(true);
+
+export const todoListMoveValidation = yup.object({
+    from: yup
+        .number()
+        .label("移動元")
+        .required()
+        .test({
+            name: "todolist-owner-test",
+            message: ({ label }: { label: string }) => `この${label}は存在しません。`,
+            test: testTodoListOwner,
+        }),
+    to: yup
+        .number()
+        .label("移動先")
+        .required()
+        .test({
+            name: "todolist-owner-test",
+            message: ({ label }: { label: string }) => `この${label}は存在しません。`,
+            test: testTodoListOwner,
+        })
+        .notOneOf([yup.ref("from")]),
+});

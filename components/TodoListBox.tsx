@@ -5,6 +5,8 @@ import SimpleForm from "./SimpleForm";
 import { todoListUpdateValidationForClient } from "@/validation/todolist-validation";
 import { useEffect, useState } from "react";
 import { getTodos, Todo } from "@/lib/todo-control";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 type TodoListBoxProps = {
     todoList: TodoList
@@ -28,8 +30,15 @@ export default function TodoListBox({ todoList }: TodoListBoxProps) {
         update: updateTodoListName,
     }
 
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: todoList.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
     return (
-        <div className="min-w-120">
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="min-w-120">
             <SimpleForm {...simpleFormProps} />
             <Button>削除</Button>
             <div>

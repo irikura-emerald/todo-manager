@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import prisma from "./prisma";
-import { todoListCreateValidation, todoListUpdateValidationForServer } from "@/validation/todolist-validation";
+import { todoListCreateValidation, todoListMoveValidation, todoListUpdateValidationForServer } from "@/validation/todolist-validation";
 import { Todo } from "./todo-control";
 import { FormValues } from "@/components/SimpleForm";
 
@@ -102,4 +102,60 @@ export async function updateTodoListName({ id, value }: FormValues): Promise<boo
     });
     const isSuccessful = true;
     return isSuccessful;
+}
+
+function getOrderIds(...ids: number[]): Promise<number>[] {
+    const orderIds = ids.map(async id => {
+        const todoList = await prisma.todoList.findUnique({
+            where: { id },
+            select: { orderId: true },
+        });
+        if (!todoList) {
+            throw new Error(`todoList(id:${id})の取得に失敗しました。`);
+        }
+        const orderId = todoList.orderId;
+        return orderId;
+    });
+    return orderIds;
+}
+
+async function shiftTargetLists(orderIdFrom: number, orderIdTo: number): Promise<void> {
+    const email = await getEmailOfSession();
+    const isMoveRising = orderIdFrom < orderIdTo;
+    const where = isMoveRising
+        ? { gt: orderIdFrom, lte: orderIdTo }
+        : { lt: orderIdFrom, gte: orderIdTo };
+    const targetTodoLists = await prisma.todoList.findMany({
+        where: { orderId: where, user: { email } },
+        select: { id: true, orderId: true },
+        orderBy: { orderId: isMoveRising ? "asc" : "desc" },
+    });
+    for (const todoList of targetTodoLists) {
+        const newOrderId = todoList.orderId + (isMoveRising ? (- 1) : 1);
+        // console.log({ old: todoList.orderId, new: newOrderId });
+        await prisma.todoList.update({
+            where: { id: todoList.id },
+            data: { orderId: newOrderId },
+        });
+    }
+}
+
+export async function moveTodoList(idFrom: number, idTo: number) {
+    await todoListMoveValidation.validate({ from: idFrom, to: idTo });
+
+    const [asyncOrderIdFrom, asyncOrderIdTo] = getOrderIds(idFrom, idTo);
+    const orderIdFrom = await asyncOrderIdFrom;
+    const orderIdTo = await asyncOrderIdTo;
+
+    await prisma.todoList.update({
+        where: { id: idFrom },
+        data: { orderId: -1 },
+    });
+
+    await shiftTargetLists(orderIdFrom, orderIdTo);
+
+    await prisma.todoList.update({
+        where: { id: idFrom },
+        data: { orderId: orderIdTo },
+    });
 }
