@@ -29,3 +29,24 @@ export async function getTodos(todoListId: number): Promise<Todo[]> {
     });
     return todos;
 }
+
+export async function createTodo({ todoListId, name }: { todoListId: number, name: string }): Promise<Todo> {
+    await todoCreateValidationForServer.validate({ todoListId, name });
+
+    const { _max: { orderId: maxOfOrderId } } = await prisma.todo.aggregate({
+        _max: { orderId: true },
+        where: { todoListId },
+    });
+    const orderId = (maxOfOrderId as number) + 1;
+
+    console.log({ name, orderId, todoListId });
+    const newTodo = await prisma.todo.create({
+        data: {
+            name,
+            orderId,
+            todoListId,
+        },
+        select: { id: true, name: true, detail: true, deadline: true, isDone: true, orderId: true },
+    });
+    return newTodo;
+}
