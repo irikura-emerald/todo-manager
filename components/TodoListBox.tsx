@@ -12,9 +12,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { todoCreateValidationForClient } from "@/validation/todo-validation";
 
 type TodoListBoxProps = {
-    todoList: TodoList
+    todoList: TodoList,
+    todoLists: TodoList[],
+    setTodoLists: (todoLists: TodoList[]) => void,
 };
-export default function TodoListBox({ todoList }: TodoListBoxProps) {
+export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoListBoxProps) {
     const [todos, setTodos] = useState<Todo[]>([]);
 
     useEffect(() => {
@@ -41,10 +43,23 @@ export default function TodoListBox({ todoList }: TodoListBoxProps) {
     };
 
     function handleDelete() {
-        if (!confirm("本当に削除しますか？(ページをリロードします)")) {
+        if (!confirm("本当に削除しますか？")) {
             return;
         }
-        deleteTodoList(todoList.id).then(() => location.reload());
+        deleteTodoList(todoList.id)
+            .then(() => {
+                const newTodoLists: TodoList[] = [];
+                for (const oldList of todoLists) {
+                    if (todoList.id < oldList.id) {
+                        newTodoLists.push(oldList);
+                    } else if (todoList.id > oldList.id) {
+                        const newList = { ...oldList };
+                        newList.orderId = oldList.orderId - 1;
+                        newTodoLists.push(newList);
+                    }
+                }
+                setTodoLists(newTodoLists);
+            });
     }
 
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({

@@ -76,7 +76,7 @@ export default function Home() {
             {
               todoLists.map(todoList => {
                 // console.log(todoList);
-                return <TodoListBox key={todoList.id} todoList={todoList} />;
+                return <TodoListBox key={todoList.id} {...{ todoList, todoLists, setTodoLists }} />;
               })
             }
           </SortableContext>
