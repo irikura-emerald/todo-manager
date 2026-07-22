@@ -104,8 +104,9 @@ export async function updateTodoListName({ id, value }: FormValues): Promise<boo
     return isSuccessful;
 }
 
-function getOrderIds(...ids: number[]): Promise<number>[] {
-    const orderIds = ids.map(async id => {
+async function getOrderIds(...ids: number[]): Promise<number[]> {
+    const orderIds: number[] = [];
+    for (const id of ids) {
         const todoList = await prisma.todoList.findUnique({
             where: { id },
             select: { orderId: true },
@@ -114,8 +115,8 @@ function getOrderIds(...ids: number[]): Promise<number>[] {
             throw new Error(`todoList(id:${id})の取得に失敗しました。`);
         }
         const orderId = todoList.orderId;
-        return orderId;
-    });
+        orderIds.push(orderId);
+    }
     return orderIds;
 }
 
@@ -143,19 +144,13 @@ async function shiftTargetLists(orderIdFrom: number, orderIdTo: number): Promise
 export async function moveTodoList(idFrom: number, idTo: number) {
     await todoListMoveValidation.validate({ from: idFrom, to: idTo });
 
-    const [asyncOrderIdFrom, asyncOrderIdTo] = getOrderIds(idFrom, idTo);
-    const orderIdFrom = await asyncOrderIdFrom;
-    const orderIdTo = await asyncOrderIdTo;
-
-    await prisma.todoList.update({
+    const updateOrderIdFrom = (orderId: number) => prisma.todoList.update({
         where: { id: idFrom },
-        data: { orderId: -1 },
+        data: { orderId },
     });
 
+    const [orderIdFrom, orderIdTo] = await getOrderIds(idFrom, idTo);
+    await updateOrderIdFrom(-1);
     await shiftTargetLists(orderIdFrom, orderIdTo);
-
-    await prisma.todoList.update({
-        where: { id: idFrom },
-        data: { orderId: orderIdTo },
-    });
+    await updateOrderIdFrom(orderIdTo);
 }
