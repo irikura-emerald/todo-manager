@@ -38,7 +38,8 @@ export default function TodoListBox({ todoList }: TodoListBoxProps) {
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="min-w-120">
+        <div ref={setNodeRef} style={style} className="min-w-120">
+            <div {...attributes} {...listeners} className="h-2 border-y-2 mx-4 my-2"></div>
             <SimpleForm {...simpleFormProps} />
             <Button>削除</Button>
             <div>
