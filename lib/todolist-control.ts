@@ -5,6 +5,8 @@ import prisma from "./prisma";
 import { todoListCreateValidation, todoListMoveValidation, todoListUpdateValidationForServer } from "@/validation/todolist-validation";
 import { Todo } from "./todo-control";
 import { FormValues } from "@/components/SimpleForm";
+import { PrismaClient } from "@/app/generated/prisma/internal/class";
+import { DefaultArgs } from "@prisma/client/runtime/client";
 
 export type TodoList = {
     id: number,
@@ -104,10 +106,15 @@ export async function updateTodoListName({ id, value }: FormValues): Promise<boo
     return isSuccessful;
 }
 
-async function getOrderIds(...ids: number[]): Promise<number[]> {
+type Transaction = Omit<PrismaClient<never, undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">;
+type getOrderIdsProps = {
+    tx: Transaction,
+    ids: number[],
+};
+async function getOrderIds({ tx, ids }: getOrderIdsProps): Promise<number[]> {
     const orderIds: number[] = [];
     for (const id of ids) {
-        const todoList = await prisma.todoList.findUnique({
+        const todoList = await tx.todoList.findUnique({
             where: { id },
             select: { orderId: true },
         });
@@ -120,13 +127,18 @@ async function getOrderIds(...ids: number[]): Promise<number[]> {
     return orderIds;
 }
 
-async function shiftTargetLists(orderIdFrom: number, orderIdTo: number): Promise<void> {
-    const email = await getEmailOfSession();
+type shiftTargetListsProps = {
+    tx: Transaction,
+    email: string,
+    orderIdFrom: number,
+    orderIdTo: number,
+};
+async function shiftTargetLists({ tx, email, orderIdFrom, orderIdTo }: shiftTargetListsProps): Promise<void> {
     const isMoveRising = orderIdFrom < orderIdTo;
     const where = isMoveRising
         ? { gt: orderIdFrom, lte: orderIdTo }
         : { lt: orderIdFrom, gte: orderIdTo };
-    const targetTodoLists = await prisma.todoList.findMany({
+    const targetTodoLists = await tx.todoList.findMany({
         where: { orderId: where, user: { email } },
         select: { id: true, orderId: true },
         orderBy: { orderId: isMoveRising ? "asc" : "desc" },
@@ -134,7 +146,7 @@ async function shiftTargetLists(orderIdFrom: number, orderIdTo: number): Promise
     for (const todoList of targetTodoLists) {
         const newOrderId = todoList.orderId + (isMoveRising ? (- 1) : 1);
         // console.log({ old: todoList.orderId, new: newOrderId });
-        await prisma.todoList.update({
+        await tx.todoList.update({
             where: { id: todoList.id },
             data: { orderId: newOrderId },
         });
@@ -143,14 +155,16 @@ async function shiftTargetLists(orderIdFrom: number, orderIdTo: number): Promise
 
 export async function moveTodoList(idFrom: number, idTo: number) {
     await todoListMoveValidation.validate({ from: idFrom, to: idTo });
+    const email = await getEmailOfSession();
 
-    const updateOrderIdFrom = (orderId: number) => prisma.todoList.update({
-        where: { id: idFrom },
-        data: { orderId },
+    await prisma.$transaction(async (tx) => {
+        const updateOrderIdFrom = (orderId: number) => tx.todoList.update({
+            where: { id: idFrom },
+            data: { orderId },
+        });
+        const [orderIdFrom, orderIdTo] = await getOrderIds({ tx, ids: [idFrom, idTo] });
+        await updateOrderIdFrom(-1);
+        await shiftTargetLists({ tx, email, orderIdFrom, orderIdTo });
+        await updateOrderIdFrom(orderIdTo);
     });
-
-    const [orderIdFrom, orderIdTo] = await getOrderIds(idFrom, idTo);
-    await updateOrderIdFrom(-1);
-    await shiftTargetLists(orderIdFrom, orderIdTo);
-    await updateOrderIdFrom(orderIdTo);
 }
