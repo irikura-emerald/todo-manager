@@ -107,11 +107,11 @@ export async function updateTodoListName({ id, value }: FormValues): Promise<boo
 }
 
 type Transaction = Omit<PrismaClient<never, undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">;
-type getOrderIdsProps = {
+type GetOrderIdsProps = {
     tx: Transaction,
     ids: number[],
 };
-async function getOrderIds({ tx, ids }: getOrderIdsProps): Promise<number[]> {
+async function getOrderIds({ tx, ids }: GetOrderIdsProps): Promise<number[]> {
     const orderIds: number[] = [];
     for (const id of ids) {
         const todoList = await tx.todoList.findUnique({
@@ -127,13 +127,13 @@ async function getOrderIds({ tx, ids }: getOrderIdsProps): Promise<number[]> {
     return orderIds;
 }
 
-type shiftTargetListsProps = {
+type ShiftTargetListsProps = {
     tx: Transaction,
     email: string,
     orderIdFrom: number,
     orderIdTo: number,
 };
-async function shiftTargetLists({ tx, email, orderIdFrom, orderIdTo }: shiftTargetListsProps): Promise<void> {
+async function shiftTargetLists({ tx, email, orderIdFrom, orderIdTo }: ShiftTargetListsProps): Promise<void> {
     const isMoveRising = orderIdFrom < orderIdTo;
     const where = isMoveRising
         ? { gt: orderIdFrom, lte: orderIdTo }
