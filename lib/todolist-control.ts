@@ -11,7 +11,6 @@ import { DefaultArgs } from "@prisma/client/runtime/client";
 export type TodoList = {
     id: number,
     name: string,
-    orderId: number,
     todos: Todo[],
 };
 
@@ -33,7 +32,6 @@ export async function getTodoLists(): Promise<TodoList[]> {
         select: {
             id: true,
             name: true,
-            orderId: true,
         },
         orderBy: {
             orderId: "asc"

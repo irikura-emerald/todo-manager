@@ -48,16 +48,8 @@ export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoL
         }
         deleteTodoList(todoList.id)
             .then(() => {
-                const newTodoLists: TodoList[] = [];
-                for (const oldList of todoLists) {
-                    if (todoList.id < oldList.id) {
-                        newTodoLists.push(oldList);
-                    } else if (todoList.id > oldList.id) {
-                        const newList = { ...oldList };
-                        newList.orderId = oldList.orderId - 1;
-                        newTodoLists.push(newList);
-                    }
-                }
+                const ownId = todoList.id;
+                const newTodoLists = todoLists.filter(todoList => todoList.id !== ownId);
                 setTodoLists(newTodoLists);
             });
     }

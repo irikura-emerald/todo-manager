@@ -61,8 +61,6 @@ export default function Home() {
       }
 
       const movedTodoLists = arrayMove(todoLists, indexFrom, indexTo);
-      movedTodoLists.forEach((todoList, index) => todoList.orderId = index + 1);
-      // console.log(movedTodoLists.map(todoList => { return { id: todoList.id, orderId: todoList.orderId }; }));
       return movedTodoLists;
     });
   }
