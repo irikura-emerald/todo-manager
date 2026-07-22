@@ -16,8 +16,8 @@ export function TodoBox({ todo }: TodoBoxProps) {
 
     setValue("name", todo.name,);
     setValue("detail", todo.detail);
-    const formattedDate = todo.deadline.toLocaleString("sv-SE");
-    setValue("deadline", formattedDate);
+    const formattedDate = todo.deadline?.toLocaleString("sv-SE");
+    setValue("deadline", formattedDate || "");
     setValue("isDone", todo.isDone);
 
     const nameAttributes = {

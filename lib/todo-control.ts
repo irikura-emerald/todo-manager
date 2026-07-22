@@ -1,12 +1,13 @@
 "use server"
 
+import { todoCreateValidationForServer } from "@/validation/todo-validation";
 import prisma from "./prisma";
 
 export type Todo = {
     id: number,
     name: string,
     detail: string,
-    deadline: Date,
+    deadline: Date | null,
     isDone: boolean,
     orderId: number,
 };

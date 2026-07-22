@@ -39,13 +39,13 @@ model TodoList {
 }
 
 model Todo {
-  id         Int      @id @default(autoincrement())
-  name       String   @db.VarChar(100)
-  detail     String   @default("") @db.VarChar(1000)
-  deadline   DateTime
-  isDone     Boolean  @default(false)
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(100)
+  detail     String    @default("") @db.VarChar(1000)
+  deadline   DateTime?
+  isDone     Boolean   @default(false)
   orderId    Int
-  todoList   TodoList @relation(fields: [todoListId], references: [id], onDelete: Cascade)
+  todoList   TodoList  @relation(fields: [todoListId], references: [id], onDelete: Cascade)
   todoListId Int
 
   createdAt DateTime @default(now())
