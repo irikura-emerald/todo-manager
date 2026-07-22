@@ -51,3 +51,15 @@ export const todoListMoveValidation = yup.object({
         })
         .notOneOf([yup.ref("from")]),
 });
+
+export const todoListDeleteValidation = yup.object({
+    id: yup
+        .number()
+        .label("リストID")
+        .required()
+        .test({
+            name: "todolist-owner-test",
+            message: ({ label }: { label: string }) => `この${label}は存在しません。`,
+            test: testTodoListOwner,
+        }),
+});

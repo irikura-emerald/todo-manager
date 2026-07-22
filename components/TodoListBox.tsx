@@ -1,4 +1,4 @@
-import { TodoList, updateTodoListName } from "@/lib/todolist-control";
+import { deleteTodoList, TodoList, updateTodoListName } from "@/lib/todolist-control";
 import { TodoBox } from "./TodoBox";
 import { Button } from "@mui/material";
 import SimpleForm from "./SimpleForm";
@@ -37,11 +37,18 @@ export default function TodoListBox({ todoList }: TodoListBoxProps) {
         transition,
     };
 
+    function handleDelete() {
+        if (!confirm("本当に削除しますか？(ページをリロードします)")) {
+            return;
+        }
+        deleteTodoList(todoList.id).then(() => location.reload());
+    }
+
     return (
         <div ref={setNodeRef} style={style} className="min-w-120">
             <div {...attributes} {...listeners} className="h-2 border-y-2 mx-4 my-2"></div>
             <SimpleForm {...simpleFormProps} />
-            <Button>削除</Button>
+            <Button onClick={handleDelete}>削除</Button>
             <div>
                 {todos.map(todo => {
                     return (

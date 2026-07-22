@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import prisma from "./prisma";
-import { todoListCreateValidation, todoListMoveValidation, todoListUpdateValidationForServer } from "@/validation/todolist-validation";
+import { todoListCreateValidation, todoListDeleteValidation, todoListMoveValidation, todoListUpdateValidationForServer } from "@/validation/todolist-validation";
 import { Todo } from "./todo-control";
 import { FormValues } from "@/components/SimpleForm";
 import { PrismaClient } from "@/app/generated/prisma/internal/class";
@@ -166,5 +166,42 @@ export async function moveTodoList(idFrom: number, idTo: number) {
         await updateOrderIdFrom(-1);
         await shiftTargetLists({ tx, email, orderIdFrom, orderIdTo });
         await updateOrderIdFrom(orderIdTo);
+    });
+}
+
+export async function deleteTodoList(id: number) {
+    await todoListDeleteValidation.validate({ id });
+    const email = await getEmailOfSession();
+
+    prisma.$transaction(async (tx: Transaction) => {
+        const todoList = await tx.todoList.findUnique({
+            where: { id },
+            select: { orderId: true },
+        });
+        if (!todoList) {
+            throw new Error("削除対象のTODOリスト取得に失敗しました。");
+        }
+
+        await tx.todoList.delete({
+            where: { id },
+        });
+
+        const targetTodoLists = await tx.todoList.findMany({
+            where: {
+                orderId: { gt: todoList.orderId },
+                user: { email },
+            },
+            select: { id: true, orderId: true },
+            orderBy: { orderId: "asc" },
+        });
+
+        for (const todoList of targetTodoLists) {
+            const newOrderId = todoList.orderId - 1;
+            // console.log({ old: todoList.orderId, new: newOrderId });
+            await tx.todoList.update({
+                where: { id: todoList.id },
+                data: { orderId: newOrderId },
+            });
+        }
     });
 }
