@@ -9,7 +9,6 @@ export type Todo = {
     detail: string,
     deadline: Date | null,
     isDone: boolean,
-    orderId: number,
 };
 
 export async function getTodos(todoListId: number): Promise<Todo[]> {
@@ -21,7 +20,6 @@ export async function getTodos(todoListId: number): Promise<Todo[]> {
             detail: true,
             deadline: true,
             isDone: true,
-            orderId: true,
         },
         orderBy: {
             orderId: "asc",
@@ -46,7 +44,7 @@ export async function createTodo({ todoListId, name }: { todoListId: number, nam
             orderId,
             todoListId,
         },
-        select: { id: true, name: true, detail: true, deadline: true, isDone: true, orderId: true },
+        select: { id: true, name: true, detail: true, deadline: true, isDone: true },
     });
     return newTodo;
 }

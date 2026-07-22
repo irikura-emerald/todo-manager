@@ -67,7 +67,6 @@ export async function createTodoList(name: string): Promise<TodoList> {
             detail: true,
             deadline: true,
             isDone: true,
-            orderId: true,
         }
     };
 
