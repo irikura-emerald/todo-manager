@@ -1,3 +1,4 @@
+import { testTodoOwner } from "@/lib/todo-control";
 import { testTodoListOwner } from "@/lib/todolist-control";
 import yup from "@/yup.jp";
 
@@ -21,3 +22,25 @@ function getTodoCreateValidation(isForServer: boolean) {
 }
 export const todoCreateValidationForClient = getTodoCreateValidation(false);
 export const todoCreateValidationForServer = getTodoCreateValidation(true);
+
+export const todoMoveValidation = yup.object({
+    from: yup
+        .number()
+        .label("移動元")
+        .required()
+        .test({
+            name: "todolist-owner-test",
+            message: ({ label }: { label: string }) => `この${label}は存在しません。`,
+            test: testTodoOwner,
+        }),
+    to: yup
+        .number()
+        .label("移動先")
+        .required()
+        .test({
+            name: "todolist-owner-test",
+            message: ({ label }: { label: string }) => `この${label}は存在しません。`,
+            test: testTodoOwner,
+        })
+        .notOneOf([yup.ref("from")]),
+});

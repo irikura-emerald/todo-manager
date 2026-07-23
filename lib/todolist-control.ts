@@ -14,7 +14,7 @@ export type TodoList = {
     todos: Todo[],
 };
 
-async function getEmailOfSession(): Promise<string> {
+export async function getEmailOfSession(): Promise<string> {
     const session = await auth();
     const email = session?.user?.email;
     if (!email) {

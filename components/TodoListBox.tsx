@@ -4,7 +4,7 @@ import { Button, TextField } from "@mui/material";
 import SimpleForm from "./SimpleForm";
 import { todoListUpdateValidationForClient } from "@/validation/todolist-validation";
 import { useEffect, useState } from "react";
-import { createTodo, getTodos, Todo } from "@/lib/todo-control";
+import { createTodo, getTodos, moveTodo, Todo } from "@/lib/todo-control";
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useForm } from "react-hook-form";
@@ -82,11 +82,10 @@ export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoL
 
         const idFrom = active.id as number;
         const idTo = over.id as number;
-        // moveTodo(idFrom, idTo);
+        moveTodo(idFrom, idTo);
 
-        // console.log({ from: idFrom, to: idTo, todoLists });
+        // console.log({ from: idFrom, to: idTo, todos });
         setTodos((todos) => {
-
             const indexFrom = todos.findIndex(todo => todo.id == idFrom);
             const indexTo = todos.findIndex(todo => todo.id == idTo);
             if (indexFrom == -1 || indexTo == -1) {
