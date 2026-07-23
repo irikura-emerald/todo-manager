@@ -95,11 +95,11 @@ export async function testTodoListOwner(id: number): Promise<boolean> {
 
 export async function updateTodoListName({ id, value }: FormValues): Promise<boolean> {
     await todoListUpdateValidationForServer.validate({ id, value });
-    await prisma.todoList.update({
+    const todoList = await prisma.todoList.update({
         where: { id },
         data: { name: value },
     });
-    const isSuccessful = true;
+    const isSuccessful = todoList ? true : false;
     return isSuccessful;
 }
 
