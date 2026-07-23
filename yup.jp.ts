@@ -18,6 +18,7 @@ const jpLocale: yup.LocaleObject = {
                     : `${param.label}は決められた形式にしてください。`;
             return message;
         },
+        datetime: param => `${param.label}は日時を入力してください。`,
     },
 };
 yup.setLocale(jpLocale);

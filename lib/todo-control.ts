@@ -1,6 +1,6 @@
 "use server"
 
-import { todoCreateValidationForServer, todoMoveValidation } from "@/validation/todo-validation";
+import { todoCreateValidationForServer, todoMoveValidation, todoUpdateDeadlineValidationForServer, todoUpdateDetailValidationForServer, todoUpdateIsDoneValidationForServer, todoUpdateNameValidationForServer } from "@/validation/todo-validation";
 import prisma from "./prisma";
 import { PrismaClient } from "@/app/generated/prisma/internal/class";
 import { DefaultArgs } from "@prisma/client/runtime/client";
@@ -141,4 +141,44 @@ export async function moveTodo(idFrom: number, idTo: number) {
         await shiftTargetLists({ tx, todoListId, orderIdFrom, orderIdTo });
         await updateOrderIdFrom(orderIdTo);
     });
+}
+
+export async function updateTodoName({ id, value }: { id: number, value: string }): Promise<boolean> {
+    await todoUpdateNameValidationForServer.validate({ id, value });
+    const todo = await prisma.todo.update({
+        where: { id },
+        data: { name: value },
+    });
+    const isSuccessful = todo ? true : false;
+    return isSuccessful;
+}
+
+export async function updateTodoDetail({ id, value }: { id: number, value: string }): Promise<boolean> {
+    await todoUpdateDetailValidationForServer.validate({ id, value });
+    const todo = await prisma.todo.update({
+        where: { id },
+        data: { detail: value },
+    });
+    const isSuccessful = todo ? true : false;
+    return isSuccessful;
+}
+
+export async function updateTodoDeadline({ id, value }: { id: number, value: string }): Promise<boolean> {
+    await todoUpdateDeadlineValidationForServer.validate({ id, value });
+    const todo = await prisma.todo.update({
+        where: { id },
+        data: { deadline: value },
+    });
+    const isSuccessful = todo ? true : false;
+    return isSuccessful;
+}
+
+export async function updateTodoIsDone({ id, value }: { id: number, value: string }): Promise<boolean> {
+    await todoUpdateIsDoneValidationForServer.validate({ id, value });
+    const todo = await prisma.todo.update({
+        where: { id },
+        data: { isDone: value ? true : false },
+    });
+    const isSuccessful = todo ? true : false;
+    return isSuccessful;
 }
