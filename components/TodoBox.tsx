@@ -1,5 +1,7 @@
 import { Todo } from "@/lib/todo-control";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Button, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 
@@ -52,15 +54,25 @@ export function TodoBox({ todo }: TodoBoxProps) {
         helperText: errors.isDone?.message,
     };
 
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: todo.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
     return (
-        <div className="border m-1">
-            <form onSubmit={handleSubmit(() => { })}>
-                <TextField margin="normal" {...nameAttributes} />
-                <TextField margin="normal" {...detailAttributes} />
-                <TextField margin="normal" {...deadlineAttributes} />
-                <TextField margin="normal" {...isDoneAttributes} />
-            </form>
-            <Button>削除</Button>
+        <div ref={setNodeRef} style={style} className="border m-1 flex">
+            <div {...attributes} {...listeners} className="w-2 border-x-2 m-2"></div>
+            <div>
+                <form onSubmit={handleSubmit(() => { })}>
+                    <TextField margin="normal" {...nameAttributes} />
+                    <TextField margin="normal" {...detailAttributes} />
+                    <TextField margin="normal" {...deadlineAttributes} />
+                    <TextField margin="normal" {...isDoneAttributes} />
+                </form>
+                <Button>削除</Button>
+            </div>
         </div>
     );
 }

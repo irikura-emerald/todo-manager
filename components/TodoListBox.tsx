@@ -5,11 +5,12 @@ import SimpleForm from "./SimpleForm";
 import { todoListUpdateValidationForClient } from "@/validation/todolist-validation";
 import { useEffect, useState } from "react";
 import { createTodo, getTodos, Todo } from "@/lib/todo-control";
-import { useSortable } from "@dnd-kit/sortable";
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { todoCreateValidationForClient } from "@/validation/todo-validation";
+import { closestCenter, DndContext, DragEndEvent } from "@dnd-kit/core";
 
 type TodoListBoxProps = {
     todoList: TodoList,
@@ -74,18 +75,44 @@ export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoL
         helperText: errors.name?.message,
     };
 
+    function handleDragEnd({ active, over }: DragEndEvent) {
+        if (!over || active.id === over.id) {
+            return;
+        }
+
+        const idFrom = active.id as number;
+        const idTo = over.id as number;
+        // moveTodo(idFrom, idTo);
+
+        // console.log({ from: idFrom, to: idTo, todoLists });
+        setTodos((todos) => {
+
+            const indexFrom = todos.findIndex(todo => todo.id == idFrom);
+            const indexTo = todos.findIndex(todo => todo.id == idTo);
+            if (indexFrom == -1 || indexTo == -1) {
+                return todos;
+            }
+
+            const movedTodos = arrayMove(todos, indexFrom, indexTo);
+            return movedTodos;
+        });
+    }
+
     return (
         <div ref={setNodeRef} style={style} className="min-w-120">
             <div {...attributes} {...listeners} className="h-2 border-y-2 mx-4 my-2"></div>
             <SimpleForm {...simpleFormProps} />
             <Button onClick={handleDelete}>削除</Button>
             <div>
-                {todos.map(todo => {
-                    return (
-                        <TodoBox key={todo.id} todo={todo} />
-                    );
-                })}
-
+                <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext items={todos} strategy={verticalListSortingStrategy}>
+                        {todos.map(todo => {
+                            return (
+                                <TodoBox key={todo.id} todo={todo} />
+                            );
+                        })}
+                    </SortableContext>
+                </DndContext>
                 <form onSubmit={handleSubmit(handleCreateTodo)} className="min-w-120">
                     <input type="hidden" value={todoList.id} {...register("todoListId")} />
                     <TextField margin="normal" {...todoNameAttributes} />
