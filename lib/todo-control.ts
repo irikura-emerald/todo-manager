@@ -40,7 +40,7 @@ export async function createTodo({ todoListId, name }: { todoListId: number, nam
     });
     const orderId = (maxOfOrderId as number) + 1;
 
-    console.log({ name, orderId, todoListId });
+    // console.log({ name, orderId, todoListId });
     const newTodo = await prisma.todo.create({
         data: {
             name,
