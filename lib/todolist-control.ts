@@ -4,7 +4,6 @@ import { auth } from "@/auth";
 import prisma from "./prisma";
 import { todoListCreateValidation, todoListDeleteValidation, todoListMoveValidation, todoListUpdateValidationForServer } from "@/validation/todolist-validation";
 import { Todo } from "./todo-control";
-import { FormValues } from "@/components/SimpleForm";
 import { PrismaClient } from "@/app/generated/prisma/internal/class";
 import { DefaultArgs } from "@prisma/client/runtime/client";
 
@@ -93,7 +92,7 @@ export async function testTodoListOwner(id: number): Promise<boolean> {
     return isTodoListMine;
 }
 
-export async function updateTodoListName({ id, value }: FormValues): Promise<boolean> {
+export async function updateTodoListName({ id, value }: { id: number, value: string }): Promise<boolean> {
     await todoListUpdateValidationForServer.validate({ id, value });
     const todoList = await prisma.todoList.update({
         where: { id },

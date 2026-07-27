@@ -1,33 +1,32 @@
 import yup from "@/yup.jp";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TextField } from "@mui/material";
+import { FormHelperText, Switch } from "@mui/material";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
-export type SimpleValidation = yup.ObjectSchema<{
+type SimpleFormValidation = yup.ObjectSchema<{
     id: number,
-    value: string;
+    value: boolean;
 }, yup.AnyObject, {
     id: undefined,
     value: undefined;
 }, "">;
 
+type FormValues = {
+    id: number,
+    value: boolean,
+};
+
 type SimpleFormProps = {
     label: string,
-    type: string,
     id: number,
-    value: string,
-    validation: SimpleValidation,
-    update: ({ id, value }: { id: number, value: string }) => Promise<boolean>,
+    value: boolean,
+    validation: SimpleFormValidation,
+    update: ({ id, value }: FormValues) => Promise<boolean>,
 };
 
-export type FormValues = {
-    id: number,
-    value: string,
-};
-
-export default function SimpleForm({ label, type, id, value, validation, update }: SimpleFormProps) {
-    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+export default function SimpleSwitchForm({ label, id, value, validation, update }: SimpleFormProps) {
+    const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(validation),
     });
 
@@ -82,19 +81,14 @@ export default function SimpleForm({ label, type, id, value, validation, update 
     }
     //#endregion
 
-    const valueAttributes = {
-        label: labelWithMessage,
-        type,
-        ...register("value"),
-        error: "value" in errors,
-        helperText: errors.value?.message,
-        defaultValue: value,
-    };
-
     return (
         <form onSubmit={submit} onChange={change}>
             <input type="hidden" value={id} {...register("id")} />
-            <TextField margin="normal" {...valueAttributes} />
+            <label>
+                <Switch {...register("value")} defaultChecked={value} />
+                {labelWithMessage}
+            </label>
+            <FormHelperText error={"value" in errors}>{errors.value?.message}</FormHelperText>
         </form>
     );
 }

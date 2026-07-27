@@ -2,8 +2,11 @@ import { Todo, updateTodoDeadline, updateTodoDetail, updateTodoIsDone, updateTod
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Button } from "@mui/material";
-import SimpleForm from "./SimpleForm";
-import { todoUpdateDeadlineValidationForClient, todoUpdateDetailValidationForClient, todoUpdateIsDoneValidationForClient, todoUpdateNameValidationForClient } from "@/validation/todo-validation";
+import { todoUpdateDetailValidationForClient, todoUpdateIsDoneValidationForClient, todoUpdateNameValidationForClient } from "@/validation/todo-validation";
+import SimpleTextForm from "./simple-form/SimpleTextForm";
+import SimpleOptionalMultipleTextForm from "./simple-form/SimpleOptionalMultilineTextForm";
+import SimpleOptionalDateForm from "./simple-form/SimpleOptionalDateForm";
+import SimpleSwitchForm from "./simple-form/SimpleSwitchForm";
 
 type TodoBoxProps = {
     todo: Todo,
@@ -11,7 +14,6 @@ type TodoBoxProps = {
 export function TodoBox({ todo }: TodoBoxProps) {
     const nameProps = {
         label: "TODO",
-        type: "text",
         id: todo.id,
         value: todo.name,
         validation: todoUpdateNameValidationForClient,
@@ -20,7 +22,6 @@ export function TodoBox({ todo }: TodoBoxProps) {
 
     const detailProps = {
         label: "詳細",
-        type: "text",
         id: todo.id,
         value: todo.detail,
         validation: todoUpdateDetailValidationForClient,
@@ -29,16 +30,13 @@ export function TodoBox({ todo }: TodoBoxProps) {
 
     const deadlineProps = {
         label: "期日",
-        type: "datetime-local",
         id: todo.id,
-        value: todo.deadline?.toLocaleString("sv-SE") || "",
-        validation: todoUpdateDeadlineValidationForClient,
+        value: todo.deadline,
         update: updateTodoDeadline,
     };
 
     const isDoneProps = {
         label: "完了",
-        type: "checkbox",
         id: todo.id,
         value: todo.isDone,
         validation: todoUpdateIsDoneValidationForClient,
@@ -56,10 +54,10 @@ export function TodoBox({ todo }: TodoBoxProps) {
         <div ref={setNodeRef} style={style} className="border m-1 flex">
             <div {...attributes} {...listeners} className="w-2 border-x-2 m-2"></div>
             <div>
-                <SimpleForm {...nameProps} />
-                <SimpleForm {...detailProps} />
-                <SimpleForm {...deadlineProps} />
-                <SimpleForm {...isDoneProps} />
+                <SimpleTextForm {...nameProps} />
+                <SimpleOptionalMultipleTextForm {...detailProps} />
+                <SimpleOptionalDateForm {...deadlineProps} />
+                <SimpleSwitchForm {...isDoneProps} />
                 <Button>削除</Button>
             </div>
         </div>

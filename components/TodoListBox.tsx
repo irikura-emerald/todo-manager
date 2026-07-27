@@ -1,7 +1,6 @@
 import { deleteTodoList, TodoList, updateTodoListName } from "@/lib/todolist-control";
 import { TodoBox } from "./TodoBox";
 import { Button, TextField } from "@mui/material";
-import SimpleForm from "./SimpleForm";
 import { todoListUpdateValidationForClient } from "@/validation/todolist-validation";
 import { useEffect, useState } from "react";
 import { createTodo, getTodos, moveTodo, Todo } from "@/lib/todo-control";
@@ -11,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { todoCreateValidationForClient } from "@/validation/todo-validation";
 import { closestCenter, DndContext, DragEndEvent } from "@dnd-kit/core";
+import SimpleTextForm from "./simple-form/SimpleTextForm";
 
 type TodoListBoxProps = {
     todoList: TodoList,
@@ -69,7 +69,6 @@ export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoL
 
     const todoNameAttributes = {
         label: "TODO名",
-        type: "text",
         ...register("name"),
         error: "name" in errors,
         helperText: errors.name?.message,
@@ -100,7 +99,7 @@ export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoL
     return (
         <div ref={setNodeRef} style={style} className="min-w-120">
             <div {...attributes} {...listeners} className="h-2 border-y-2 mx-4 my-2"></div>
-            <SimpleForm {...simpleFormProps} />
+            <SimpleTextForm {...simpleFormProps} />
             <Button onClick={handleDelete}>削除</Button>
             <div>
                 <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>

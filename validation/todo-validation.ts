@@ -76,7 +76,6 @@ function getTodoUpdateDeailValidation(isForServer: boolean) {
         value: yup
             .string()
             .label("詳細")
-            .required()
             .max(1000),
     });
 }
@@ -87,10 +86,8 @@ function getTodoUpdateDeadlineValidation(isForServer: boolean) {
     return yup.object({
         id: getTodoIdRule(isForServer),
         value: yup
-            .string()
-            .label("期日")
-            .datetime()
-            .required(),
+            .date()
+            .label("期日"),
     });
 }
 export const todoUpdateDeadlineValidationForClient = getTodoUpdateDeadlineValidation(false);
@@ -100,7 +97,7 @@ function getTodoUpdateIsDoneValidation(isForServer: boolean) {
     return yup.object({
         id: getTodoIdRule(isForServer),
         value: yup
-            .string()
+            .boolean()
             .label("完了")
             .required(),
     });
