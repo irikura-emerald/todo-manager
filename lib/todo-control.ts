@@ -143,7 +143,7 @@ export async function moveTodo(idFrom: number, idTo: number) {
     });
 }
 
-export async function updateTodoName({ id, value }: { id: number, value: string }): Promise<boolean> {
+export async function updateTodoName({ id, value }: { id?: number, value?: string }): Promise<boolean> {
     await todoUpdateNameValidationForServer.validate({ id, value });
     const todo = await prisma.todo.update({
         where: { id },
@@ -153,7 +153,7 @@ export async function updateTodoName({ id, value }: { id: number, value: string 
     return isSuccessful;
 }
 
-export async function updateTodoDetail({ id, value }: { id: number, value?: string }): Promise<boolean> {
+export async function updateTodoDetail({ id, value }: { id?: number, value?: string }): Promise<boolean> {
     await todoUpdateDetailValidationForServer.validate({ id, value });
     const todo = await prisma.todo.update({
         where: { id },
@@ -174,7 +174,7 @@ export async function updateTodoDeadline({ id, value }: { id: number, value: Dat
     return isSuccessful;
 }
 
-export async function updateTodoIsDone({ id, value }: { id: number, value: boolean }): Promise<boolean> {
+export async function updateTodoIsDone({ id, value }: { id?: number, value?: boolean }): Promise<boolean> {
     await todoUpdateIsDoneValidationForServer.validate({ id, value });
     const todo = await prisma.todo.update({
         where: { id },

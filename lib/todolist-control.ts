@@ -92,7 +92,7 @@ export async function testTodoListOwner(id: number): Promise<boolean> {
     return isTodoListMine;
 }
 
-export async function updateTodoListName({ id, value }: { id: number, value: string }): Promise<boolean> {
+export async function updateTodoListName({ id, value }: { id?: number, value?: string }): Promise<boolean> {
     await todoListUpdateValidationForServer.validate({ id, value });
     const todoList = await prisma.todoList.update({
         where: { id },
