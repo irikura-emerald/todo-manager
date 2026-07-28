@@ -51,11 +51,14 @@ export default function SimpleOptionalDateForm({ label, id, value, update }: Sim
     }
     //#endregion
 
+    const [deadline, setDeadline] = useState(value ? dayjs(value) : null);
+
     const valueAttributes = {
         label: labelWithMessage,
         format: "YYYY/MM/DD HH:mm",
-        defaultValue: value ? dayjs(value) : null,
+        value: deadline,
         onChange: (value: PickerValue) => {
+            setDeadline(value);
             change({ id, value: value?.toDate() || null });
         },
     };
