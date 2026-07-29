@@ -1,6 +1,6 @@
 "use server"
 
-import { todoCreateValidationForServer, todoMoveValidation, todoUpdateDeadlineValidationForServer, todoUpdateDetailValidationForServer, todoUpdateIsDoneValidationForServer, todoUpdateNameValidationForServer } from "@/validation/todo-validation";
+import { todoCreateValidationForServer, todoDeleteValidation, todoMoveValidation, todoUpdateDeadlineValidationForServer, todoUpdateDetailValidationForServer, todoUpdateIsDoneValidationForServer, todoUpdateNameValidationForServer } from "@/validation/todo-validation";
 import prisma from "./prisma";
 import { PrismaClient } from "@/app/generated/prisma/internal/class";
 import { DefaultArgs } from "@prisma/client/runtime/client";
@@ -205,4 +205,40 @@ export async function updateTodoIsDone({ id, value }: { id?: number, value?: boo
         validation: todoUpdateIsDoneValidationForServer
     });
     return isSuccessful;
+}
+
+export async function deleteTodo(id: number) {
+    await todoDeleteValidation.validate({ id });
+
+    prisma.$transaction(async (tx: Transaction) => {
+        const todo = await tx.todo.findUnique({
+            where: { id },
+            select: { orderId: true, todoListId: true },
+        });
+        if (!todo) {
+            throw new Error("削除対象のTODO取得に失敗しました。");
+        }
+
+        await tx.todo.delete({
+            where: { id },
+        });
+
+        const targetTodos = await tx.todo.findMany({
+            where: {
+                orderId: { gt: todo.orderId },
+                todoListId: todo.todoListId,
+            },
+            select: { id: true, orderId: true },
+            orderBy: { orderId: "asc" },
+        });
+
+        for (const todo of targetTodos) {
+            const newOrderId = todo.orderId - 1;
+            // console.log({ old: todo.orderId, new: newOrderId });
+            await tx.todo.update({
+                where: { id: todo.id },
+                data: { orderId: newOrderId },
+            });
+        }
+    });
 }

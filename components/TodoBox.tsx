@@ -1,4 +1,4 @@
-import { Todo, updateTodoDeadline, updateTodoDetail, updateTodoIsDone, updateTodoName } from "@/lib/todo-control";
+import { deleteTodo, Todo, updateTodoDeadline, updateTodoDetail, updateTodoIsDone, updateTodoName } from "@/lib/todo-control";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Button } from "@mui/material";
@@ -10,8 +10,10 @@ import SimpleSwitchForm from "./simple-form/SimpleSwitchForm";
 
 type TodoBoxProps = {
     todo: Todo,
+    todos: Todo[],
+    setTodos: (todos: Todo[]) => void
 };
-export function TodoBox({ todo }: TodoBoxProps) {
+export function TodoBox({ todo, todos, setTodos }: TodoBoxProps) {
     const nameProps = {
         label: "TODO",
         id: todo.id,
@@ -50,6 +52,18 @@ export function TodoBox({ todo }: TodoBoxProps) {
         transition,
     };
 
+    function handleDelete() {
+        if (!confirm("本当に削除しますか？")) {
+            return;
+        }
+        deleteTodo(todo.id)
+            .then(() => {
+                const ownId = todo.id;
+                const newTodos = todos.filter(todo => todo.id !== ownId);
+                setTodos(newTodos);
+            });
+    }
+
     return (
         <div ref={setNodeRef} style={style} className="border m-1 flex">
             <div {...attributes} {...listeners} className="w-2 border-x-2 m-2"></div>
@@ -58,7 +72,7 @@ export function TodoBox({ todo }: TodoBoxProps) {
                 <SimpleOptionalMultipleTextForm {...detailProps} />
                 <SimpleOptionalDateForm {...deadlineProps} />
                 <SimpleSwitchForm {...isDoneProps} />
-                <Button>削除</Button>
+                <Button onClick={handleDelete}>削除</Button>
             </div>
         </div>
     );

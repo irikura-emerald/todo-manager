@@ -106,7 +106,7 @@ export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoL
                     <SortableContext items={todos} strategy={verticalListSortingStrategy}>
                         {todos.map(todo => {
                             return (
-                                <TodoBox key={todo.id} todo={todo} />
+                                <TodoBox key={todo.id} {...{ todo, todos, setTodos }} />
                             );
                         })}
                     </SortableContext>

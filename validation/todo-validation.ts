@@ -105,3 +105,7 @@ function getTodoUpdateIsDoneValidation(isForServer: boolean) {
 }
 export const todoUpdateIsDoneValidationForClient = getTodoUpdateIsDoneValidation(false);
 export const todoUpdateIsDoneValidationForServer = getTodoUpdateIsDoneValidation(true);
+
+export const todoDeleteValidation = yup.object({
+    id: getTodoIdRule(true),
+});
