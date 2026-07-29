@@ -80,7 +80,7 @@ function getTodoUpdateDeailValidation(isForServer: boolean) {
     });
 }
 export const todoUpdateDetailValidationForClient = getTodoUpdateDeailValidation(false);
-export const todoUpdateDetailValidationForServer = getTodoUpdateDeailValidation(true)
+export const todoUpdateDetailValidationForServer = getTodoUpdateDeailValidation(true);
 
 function getTodoUpdateDeadlineValidation(isForServer: boolean) {
     return yup.object({
@@ -92,7 +92,7 @@ function getTodoUpdateDeadlineValidation(isForServer: boolean) {
     });
 }
 export const todoUpdateDeadlineValidationForClient = getTodoUpdateDeadlineValidation(false);
-export const todoUpdateDeadlineValidationForServer = getTodoUpdateDeadlineValidation(true)
+export const todoUpdateDeadlineValidationForServer = getTodoUpdateDeadlineValidation(true);
 
 function getTodoUpdateIsDoneValidation(isForServer: boolean) {
     return yup.object({
@@ -103,5 +103,5 @@ function getTodoUpdateIsDoneValidation(isForServer: boolean) {
             .required(),
     });
 }
-export const todoUpdateIsDoneValidationForClient = getTodoUpdateIsDoneValidation(false)
-export const todoUpdateIsDoneValidationForServer = getTodoUpdateIsDoneValidation(true)
+export const todoUpdateIsDoneValidationForClient = getTodoUpdateIsDoneValidation(false);
+export const todoUpdateIsDoneValidationForServer = getTodoUpdateIsDoneValidation(true);
