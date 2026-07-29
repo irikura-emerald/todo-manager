@@ -5,6 +5,7 @@ import prisma from "./prisma";
 import { PrismaClient } from "@/app/generated/prisma/internal/class";
 import { DefaultArgs } from "@prisma/client/runtime/client";
 import { getEmailOfSession } from "./todolist-control";
+import { AnyObject, ObjectSchema } from "yup";
 
 export type Todo = {
     id: number,
@@ -143,43 +144,65 @@ export async function moveTodo(idFrom: number, idTo: number) {
     });
 }
 
-export async function updateTodoName({ id, value }: { id?: number, value?: string }): Promise<boolean> {
-    await todoUpdateNameValidationForServer.validate({ id, value });
+type ValidationType<T> = ObjectSchema<
+    { id: number; value: T; },
+    AnyObject,
+    { id: undefined; value: undefined; },
+    ""
+>;
+type UpdateTodoProps<T> = {
+    id?: number,
+    value?: T,
+    column: keyof Todo,
+    validation: ValidationType<T>
+};
+async function updateTodo<T>({ id, value, column, validation }: UpdateTodoProps<T>): Promise<boolean> {
+    await validation.validate({ id, value });
     const todo = await prisma.todo.update({
         where: { id },
-        data: { name: value },
+        data: { [column]: value },
     });
+    console.log(todo);
     const isSuccessful = todo ? true : false;
+    return isSuccessful;
+}
+
+export async function updateTodoName({ id, value }: { id?: number, value?: string }): Promise<boolean> {
+    const isSuccessful = updateTodo({
+        id,
+        value,
+        column: "name",
+        validation: todoUpdateNameValidationForServer
+    });
     return isSuccessful;
 }
 
 export async function updateTodoDetail({ id, value }: { id?: number, value?: string }): Promise<boolean> {
-    await todoUpdateDetailValidationForServer.validate({ id, value });
-    const todo = await prisma.todo.update({
-        where: { id },
-        data: { detail: value },
+    const isSuccessful = updateTodo({
+        id,
+        value,
+        column: "detail",
+        validation: todoUpdateDetailValidationForServer
     });
-    const isSuccessful = todo ? true : false;
     return isSuccessful;
 }
 
 export async function updateTodoDeadline({ id, value }: { id: number, value: Date | null }): Promise<boolean> {
-    const deadline = value || undefined;
-    await todoUpdateDeadlineValidationForServer.validate({ id, value: deadline });
-    const todo = await prisma.todo.update({
-        where: { id },
-        data: { deadline: value },
+    const isSuccessful = updateTodo({
+        id,
+        value: value || undefined,
+        column: "deadline",
+        validation: todoUpdateDeadlineValidationForServer
     });
-    const isSuccessful = todo ? true : false;
     return isSuccessful;
 }
 
 export async function updateTodoIsDone({ id, value }: { id?: number, value?: boolean }): Promise<boolean> {
-    await todoUpdateIsDoneValidationForServer.validate({ id, value });
-    const todo = await prisma.todo.update({
-        where: { id },
-        data: { isDone: value ? true : false },
+    const isSuccessful = updateTodo({
+        id,
+        value: value,
+        column: "isDone",
+        validation: todoUpdateIsDoneValidationForServer
     });
-    const isSuccessful = todo ? true : false;
     return isSuccessful;
 }
