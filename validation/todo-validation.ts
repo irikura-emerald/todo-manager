@@ -87,7 +87,8 @@ function getTodoUpdateDeadlineValidation(isForServer: boolean) {
         id: getTodoIdRule(isForServer),
         value: yup
             .date()
-            .label("期日"),
+            .label("期日")
+            .nullable(),
     });
 }
 export const todoUpdateDeadlineValidationForClient = getTodoUpdateDeadlineValidation(false);

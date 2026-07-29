@@ -190,7 +190,7 @@ export async function updateTodoDetail({ id, value }: { id?: number, value?: str
 export async function updateTodoDeadline({ id, value }: { id: number, value: Date | null }): Promise<boolean> {
     const isSuccessful = updateTodo({
         id,
-        value: value || undefined,
+        value,
         column: "deadline",
         validation: todoUpdateDeadlineValidationForServer
     });
