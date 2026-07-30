@@ -19,6 +19,7 @@ services:
             - ./components:/app/${APP_NAME}/components
             - ./validation:/app/${APP_NAME}/validation
             - ./auth.ts:/app/${APP_NAME}/auth.ts
+            - ./proxy.ts:/app/${APP_NAME}/proxy.ts
         depends_on:
             - postgres
             - redis
