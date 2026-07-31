@@ -162,7 +162,7 @@ async function updateTodo<T>({ id, value, column, validation }: UpdateTodoProps<
         where: { id },
         data: { [column]: value },
     });
-    console.log(todo);
+    // console.log(todo);
     const isSuccessful = todo ? true : false;
     return isSuccessful;
 }
