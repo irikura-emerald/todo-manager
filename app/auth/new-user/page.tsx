@@ -94,25 +94,15 @@ export default function NewUserPage() {
     };
 
     return (
-        <>
-            <form onSubmit={handleSubmit(signUpUsingCredentials)}>
-                <div>
-                    <TextField margin="normal" {...nameAttributes} />
-                </div>
-                <div>
-                    <TextField margin="normal"  {...emailAttributes} />
-                </div>
-                <div>
-                    <TextField margin="normal"  {...tellAttributes} />
-                </div>
-                <div>
-                    <TextField margin="normal"  {...passwordAttributes} />
-                </div>
-                <div>
-                    <Button variant="contained" type="submit" disabled={!isFormValid}>新規登録</Button>
-                </div>
+        <div className="flex justify-center items-center h-screen">
+            <form onSubmit={handleSubmit(signUpUsingCredentials)} className="flex flex-col justify-center items-center">
+                <TextField margin="normal" {...nameAttributes} />
+                <TextField margin="normal"  {...emailAttributes} />
+                <TextField margin="normal"  {...tellAttributes} />
+                <TextField margin="normal"  {...passwordAttributes} />
+                <Button variant="contained" type="submit" disabled={!isFormValid}>新規登録</Button>
+                <div>{message}</div>
             </form>
-            <div>{message}</div>
-        </>
+        </div>
     );
 }
