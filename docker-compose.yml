@@ -1,5 +1,6 @@
 services:
     app:
+        # command: sh -c "npm run build && npm start" # 本番用
         build:
             context: .
             dockerfile: Dockerfile

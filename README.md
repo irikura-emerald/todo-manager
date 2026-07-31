@@ -21,6 +21,10 @@ Docker + React + Next.js + TypeScript + TailwindCSS + PostgreSQL(Prisma経由) +
     ```
 1. Webブラウザで[localhost:3000](http://localhost:3000)を開いてください
 
+## 本番環境での実行
+
+docker-compose.ymlの「本番用」と書いてある行のコメントアウトを外し、上記手順を実行してください。
+
 ## VSCode CodeIntelliSense対応
 
 プロジェクトルートで以下を実行すると、node_modulesが作成され、VS Codeでの依存関係を解決できます。
