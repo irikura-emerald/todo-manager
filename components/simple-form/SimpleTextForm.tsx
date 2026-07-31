@@ -11,6 +11,7 @@ export default function SimpleTextForm(props: SimpleFormProps<ValueType>) {
             {...register("value")}
             error={"value" in errors}
             helperText={errors.value?.message}
+            className="w-full"
         />
     );
     return (

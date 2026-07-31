@@ -11,6 +11,9 @@ export default function SimpleOptionalMultipleTextForm(props: SimpleFormProps<Va
             {...register("value")}
             error={"value" in errors}
             helperText={errors.value?.message}
+            multiline
+            rows={5}
+            className="w-full"
         />
     );
     return (
