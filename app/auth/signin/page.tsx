@@ -58,20 +58,15 @@ export default function SignInPage() {
     };
 
     return (
-        <>
-            <form onSubmit={handleSubmit(signInUsingCredentials)} method="POST" noValidate>
-                <div>
-                    <TextField margin="normal" {...emailAttributes} />
-                </div>
-                <div>
-                    <TextField margin="normal" {...passwordAttributes} />
-                </div>
-                <div>
-                    <Button variant="contained" type="submit" disabled={!isFormValid}>ログイン</Button>
-                </div>
+        <div className="flex justify-center items-center h-screen">
+            <form onSubmit={handleSubmit(signInUsingCredentials)} method="POST" noValidate
+                className="flex flex-col justify-center items-center">
+                <TextField margin="normal" {...emailAttributes} />
+                <TextField margin="normal" {...passwordAttributes} />
+                <Button variant="contained" type="submit" disabled={!isFormValid}>ログイン</Button>
+                <div>{message}</div>
+                <Link href="/auth/new-user">新規登録はこちらから</Link>
             </form>
-            <div>{message}</div>
-            <Link href="/auth/new-user">新規登録はこちらから</Link>
-        </>
+        </div>
     );
 }
