@@ -59,13 +59,17 @@ export default function UserPage() {
     return (
         <>
             <Navigation />
-            <SessionProvider>
-                <BaseForm {...nameFormProps} />
-                <BaseForm {...emailFormProps} />
-                <BaseForm {...tellFormProps} />
-                <PasswordForm />
-            </SessionProvider>
-            <Button onClick={deleteUser}>退会</Button>
+            <div className="flex justify-center items-center h-screen">
+                <SessionProvider>
+                    <div className="flex flex-col justify-center items-center">
+                        <BaseForm {...nameFormProps} />
+                        <BaseForm {...emailFormProps} />
+                        <BaseForm {...tellFormProps} />
+                        <PasswordForm />
+                        <Button variant="outlined" onClick={deleteUser}>退会</Button>
+                    </div>
+                </SessionProvider>
+            </div>
         </>
     );
 }

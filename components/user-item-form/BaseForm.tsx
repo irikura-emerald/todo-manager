@@ -75,9 +75,9 @@ export default function BaseForm({
 
     return (
         <div>
-            <form onSubmit={handleSubmit(update)}>
+            <form onSubmit={handleSubmit(update)} className="flex items-center">
                 <TextField margin="normal" {...attributes} />
-                <Button variant="contained" type="submit" disabled={!isFormValid}>変更</Button>
+                <Button variant="contained" type="submit" disabled={!isFormValid} className="size-13">変更</Button>
             </form>
             <div>{message}</div>
         </div>

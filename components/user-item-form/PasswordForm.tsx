@@ -47,14 +47,12 @@ export default function PasswordForm() {
 
     return (
         <div>
-            <form onSubmit={handleSubmit(update)}>
-                <div>
+            <form onSubmit={handleSubmit(update)} className="flex items-center">
+                <div className="flex flex-col">
                     <TextField margin="normal" {...currentPasswordAttributes} />
-                </div>
-                <div>
                     <TextField margin="normal" {...newPasswordAttributes} />
                 </div>
-                <Button variant="contained" type="submit" disabled={!isFormValid}>変更</Button>
+                <Button variant="contained" type="submit" disabled={!isFormValid} className="w-13 h-30">変更</Button>
             </form>
             <div>{message}</div>
         </div>
