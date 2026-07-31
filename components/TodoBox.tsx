@@ -67,12 +67,14 @@ export function TodoBox({ todo, todos, setTodos }: TodoBoxProps) {
     return (
         <div ref={setNodeRef} style={style} className="border m-1 flex">
             <div {...attributes} {...listeners} className="w-2 border-x-2 m-2"></div>
-            <div>
+            <div className="flex flex-col">
                 <SimpleTextForm {...nameProps} />
                 <SimpleOptionalMultipleTextForm {...detailProps} />
                 <SimpleOptionalDateForm {...deadlineProps} />
-                <SimpleSwitchForm {...isDoneProps} />
-                <Button onClick={handleDelete}>削除</Button>
+                <div className="flex justify-between p-1">
+                    <SimpleSwitchForm {...isDoneProps} />
+                    <Button onClick={handleDelete} variant="outlined">削除</Button>
+                </div>
             </div>
         </div>
     );

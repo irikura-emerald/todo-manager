@@ -80,9 +80,9 @@ export default function Home() {
           </SortableContext>
         </DndContext>
 
-        <form onSubmit={handleSubmit(addTodoList)} className="min-w-120">
+        <form onSubmit={handleSubmit(addTodoList)} className="flex justify-evenly items-center min-w-80 h-fit">
           <TextField margin="normal" {...todoListNameAttributes} />
-          <Button variant="contained" type="submit" disabled={isSubmitting}>新規作成</Button>
+          <Button variant="contained" type="submit" disabled={isSubmitting} className="w-13 h-8">作成</Button>
         </form>
       </div>
     </>

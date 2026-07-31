@@ -97,10 +97,12 @@ export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoL
     }
 
     return (
-        <div ref={setNodeRef} style={style} className="min-w-120">
+        <div ref={setNodeRef} style={style} className="min-w-80">
             <div {...attributes} {...listeners} className="h-2 border-y-2 mx-4 my-2"></div>
-            <SimpleTextForm {...simpleFormProps} />
-            <Button onClick={handleDelete}>削除</Button>
+            <div className="flex justify-evenly items-center">
+                <SimpleTextForm {...simpleFormProps} />
+                <Button onClick={handleDelete} variant="outlined" className="w-13">削除</Button>
+            </div>
             <div>
                 <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                     <SortableContext items={todos} strategy={verticalListSortingStrategy}>
@@ -111,10 +113,12 @@ export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoL
                         })}
                     </SortableContext>
                 </DndContext>
-                <form onSubmit={handleSubmit(handleCreateTodo)} className="min-w-120">
+                <form onSubmit={handleSubmit(handleCreateTodo)}>
                     <input type="hidden" value={todoList.id} {...register("todoListId")} />
-                    <TextField margin="normal" {...todoNameAttributes} />
-                    <Button variant="contained" type="submit" disabled={isSubmitting}>新規作成</Button>
+                    <div className="flex justify-evenly items-center">
+                        <TextField margin="normal" {...todoNameAttributes} />
+                        <Button variant="outlined" type="submit" disabled={isSubmitting} className="w-13">作成</Button>
+                    </div>
                 </form>
             </div>
         </div>
