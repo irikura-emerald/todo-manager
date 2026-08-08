@@ -14,6 +14,8 @@ services:
             - REDIS_URL=${REDIS_URL}
             - TZ=Asia/Tokyo
             - AUTH_SECRET=${AUTH_SECRET}
+            - RATE_LIMITING_LIMIT=${RATE_LIMITING_LIMIT}
+            - RATE_LIMITING_WINDOW_MS=${RATE_LIMITING_WINDOW_MS}
         volumes:
             - ./app:/app/${APP_NAME}/app
             - ./lib:/app/${APP_NAME}/lib

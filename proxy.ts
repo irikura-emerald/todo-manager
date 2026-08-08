@@ -8,8 +8,9 @@ async function processRateLimit(request: NextRequest) {
         request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
         || request.headers.get('x-real-ip')
         || 'unknown';
-    const limit = 100;
-    const windowMs = 60_000;
+    const limit = Number(process.env.RATE_LIMITING_LIMIT);
+    const windowMs = Number(process.env.RATE_LIMITING_WINDOW_MS);
+    // console.log({ limit, windowMs });
     const result = await checkRateLimit(ip, limit, windowMs); // windowMs(ミリ秒)にlimit回まで
     // console.log({ ip, ...result });
 
