@@ -1,8 +1,6 @@
-これは以下を利用したプロジェクトであり、テンプレートとして利用することを想定しています。  
-Docker + React + Next.js + TypeScript + TailwindCSS + PostgreSQL(Prisma経由) + Redis
-
-[Prisma公式ドキュメント](https://www.prisma.io/docs/guides/frameworks/nextjs)を参考に作成しました。  
-リンクの追加や、Redisによるキャッシュ(トップページのみ)など、若干の変更を加えています。
+これはTODOを管理するアプリです。  
+ログインユーザごとにTODOを管理します。  
+DB初期化時に作成されるユーザでログイン(パスワードは「password」)するか、新規登録してから利用してください。
 
 ## 始め方
 
