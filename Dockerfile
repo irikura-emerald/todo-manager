@@ -12,4 +12,8 @@ RUN npm ci
 COPY prisma/ ./prisma/ 
 COPY eslint.config.mjs next.config.ts postcss.config.mjs prisma.config.ts tsconfig.json proxy.ts yup.jp.ts ./
 
+# 初期化処理
+COPY entry-point.sh ./
+ENTRYPOINT [ "./entry-point.sh" ]
+
 CMD ["npm", "run", "dev"]

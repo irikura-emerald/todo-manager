@@ -5,17 +5,10 @@ DB初期化時に作成されるユーザでログイン(パスワードは「pa
 ## 始め方
 
 1. example.envをコピーし、.envを作成してください。
-1. プロジェクトルートで以下を実行してください
-
+1. プロジェクトルートで以下を実行してください。(初回起動時、DBは自動で初期化されます)
     ```bash
     docker compose build
     docker compose up
-    ```
-1. 別のターミナルを開き、DBを初期化してください(2回目以降は不要)
-    ```bash
-    docker compose exec app bash
-    npx prisma migrate dev --name init
-    npx prisma db seed
     ```
 1. Webブラウザで[localhost:3000](http://localhost:3000)を開いてください
 
@@ -32,6 +25,14 @@ npm install
 ```
 
 ## DB操作
+- 初期化
+    1. プロジェクトルートで以下を実行してください
+    ```bash
+    docker compose exec app bash
+    npx prisma migrate reset
+    npx prisma migrate dev --name init
+    npx prisma db seed
+    ```
 
 - Prisma Studio
     1. プロジェクトルートで以下を実行してください。
