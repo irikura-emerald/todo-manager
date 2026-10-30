@@ -35,11 +35,17 @@ npm install
     ```
 
 - Prisma Studio
-    1. プロジェクトルートで以下を実行してください。
+    1. プロジェクトルートでPrismaをインストールしてください。
         ```bash
-        docker compose exec app npx prisma studio --port 5555 --browser none
+        npm install
         ```
-    2. [http://localhost:5555](http://localhost:5555)を開く
+    2. Dockerコンテナ外でPrisma Studioを起動します。  
+    url(`postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}`)は.envの設定に応じて変えてください。  
+    example.envの設定から変えていない場合、以下のようになるはずです。
+        ```bash
+        npx prisma studio --url="postgresql://postgres:postgres@localhost:5432/my_db"
+        ```
+    3. Prisma Studioが起動しブラウザで表示される。
 
 - psqlコマンド
     1. プロジェクトルートで以下を実行してください。
