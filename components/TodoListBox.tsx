@@ -2,8 +2,8 @@ import { deleteTodoList, TodoList, updateTodoListName } from "@/lib/todolist-con
 import { TodoBox } from "./TodoBox";
 import { Button, TextField } from "@mui/material";
 import { todoListUpdateValidationForClient } from "@/validation/todolist-validation";
-import { useEffect, useState } from "react";
-import { createTodo, getTodos, moveTodo, Todo } from "@/lib/todo-control";
+import { useState } from "react";
+import { createTodo, moveTodo, Todo } from "@/lib/todo-control";
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useForm } from "react-hook-form";
@@ -18,14 +18,7 @@ type TodoListBoxProps = {
     setTodoLists: (todoLists: TodoList[]) => void,
 };
 export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoListBoxProps) {
-    const [todos, setTodos] = useState<Todo[]>([]);
-
-    useEffect(() => {
-        getTodos(todoList.id)
-            .then(todos => {
-                setTodos(todos);
-            });
-    }, [todoList]);
+    const [todos, setTodos] = useState<Todo[]>(todoList.todos);
 
     const simpleFormProps = {
         label: "リスト名",

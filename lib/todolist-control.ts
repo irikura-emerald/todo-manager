@@ -31,6 +31,18 @@ export async function getTodoLists(): Promise<TodoList[]> {
         select: {
             id: true,
             name: true,
+            todos: {
+                select: {
+                    id: true,
+                    name: true,
+                    detail: true,
+                    deadline: true,
+                    isDone: true,
+                },
+                orderBy: {
+                    orderId: "asc",
+                },
+            },
         },
         orderBy: {
             orderId: "asc"

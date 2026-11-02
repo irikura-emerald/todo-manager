@@ -15,23 +15,6 @@ export type Todo = {
     isDone: boolean,
 };
 
-export async function getTodos(todoListId: number): Promise<Todo[]> {
-    const todos = await prisma.todo.findMany({
-        where: { todoListId },
-        select: {
-            id: true,
-            name: true,
-            detail: true,
-            deadline: true,
-            isDone: true,
-        },
-        orderBy: {
-            orderId: "asc",
-        },
-    });
-    return todos;
-}
-
 export async function createTodo({ todoListId, name }: { todoListId: number, name: string }): Promise<Todo> {
     await todoCreateValidationForServer.validate({ todoListId, name });
 
