@@ -4,7 +4,7 @@ import Navigation from "@/components/Navigation";
 import TodoListBox from "@/components/TodoListBox";
 import { moveTodo as moveTodoInDB } from "@/lib/todo-control";
 import { moveTodoList as moveTodoListInDB, createTodoList, getTodoLists } from "@/lib/todolist-control";
-import { addPrefixToTodoListId, createSetTodos, getFromAndTo, isIdsValid, isSameTodoLists, isSameTodos, isTodoListIdValid, PrefixedTodo, PrefixedTodoList } from "@/lib/todolists-state-util";
+import { addPrefixToTodoListId, createSetTodos, getFromAndTo, isIdsValid, isTodoListIdValid, PrefixedTodo, PrefixedTodoList } from "@/lib/todolists-state-util";
 import { todoListCreateValidation } from "@/validation/todolist-validation";
 import { closestCorners, DndContext, DragEndEvent, DragOverEvent } from "@dnd-kit/core";
 import { arrayMove, horizontalListSortingStrategy, SortableContext } from "@dnd-kit/sortable";
@@ -48,6 +48,7 @@ export default function TestPage() {
         reset({ name: "" });
     }
 
+    // Todoを横のTodoListへ移動する処理(DBへの反映はしない)
     function handleDragOver(event: DragOverEvent) {
         const { from, to } = getFromAndTo(event);
 
@@ -98,17 +99,19 @@ export default function TestPage() {
     function handleDragEnd(event: DragEndEvent) {
         const isMovingTodoList = TODO_LIST_CONTAINER_ID === event.active.data.current?.sortable.containerId;
         if (isMovingTodoList) {
+            // TodoListの移動
             moveTodoList(event);
         } else {
+            // Todoの移動
             moveTodo(event);
         }
     }
 
     function moveTodo(event: DragEndEvent) {
         const { from, to } = getFromAndTo(event);
-        if (!isIdsValid({ from, to })
-            || !isSameTodoLists({ from, to })
-            || isSameTodos({ from, to })) {
+        const isSameTodoLists = from.todoListId === to.todoListId;
+        const isSameTodos = from.todoId === to.todoId;
+        if (!isIdsValid({ from, to }) || !isSameTodoLists || isSameTodos) {
             return;
         }
 

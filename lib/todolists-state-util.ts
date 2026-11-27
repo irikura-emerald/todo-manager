@@ -70,14 +70,6 @@ export function isTodoIdValid(id: string) {
     return regex.test(id);
 }
 
-export function isSameTodos({ from, to }: FromAndTo) {
-    return from.todoId === to.todoId;
-}
-
-export function isSameTodoLists({ from, to }: FromAndTo) {
-    return from.todoListId === to.todoListId;
-}
-
 // TodoとTodoListのidにprefixをつける
 // (TodoとTodoListのidが一致した場合、dndkitで誤動作するため)
 type PrefixedId = {
