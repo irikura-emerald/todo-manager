@@ -1,4 +1,4 @@
-import { deleteTodo, Todo, updateTodoDeadline, updateTodoDetail, updateTodoIsDone, updateTodoName } from "@/lib/todo-control";
+import { deleteTodo, updateTodoDeadline, updateTodoDetail, updateTodoIsDone, updateTodoName } from "@/lib/todo-control";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Button } from "@mui/material";
@@ -7,16 +7,16 @@ import SimpleTextForm from "./simple-form/SimpleTextForm";
 import SimpleOptionalMultipleTextForm from "./simple-form/SimpleOptionalMultilineTextForm";
 import SimpleOptionalDateForm from "./simple-form/SimpleOptionalDateForm";
 import SimpleSwitchForm from "./simple-form/SimpleSwitchForm";
+import { PrefixedTodo } from "@/lib/todolists-state-util";
 
 type TodoBoxProps = {
-    todo: Todo,
-    todos: Todo[],
-    setTodos: (todos: Todo[]) => void
+    todo: PrefixedTodo,
+    setTodos: (getNewTodos: ((prevTodos: PrefixedTodo[]) => PrefixedTodo[])) => void,
 };
-export function TodoBox({ todo, todos, setTodos }: TodoBoxProps) {
+export function TodoBox({ todo, setTodos }: TodoBoxProps) {
     const nameProps = {
         label: "TODO",
-        id: todo.id,
+        id: todo.originId,
         value: todo.name,
         validation: todoUpdateNameValidationForClient,
         update: updateTodoName,
@@ -24,7 +24,7 @@ export function TodoBox({ todo, todos, setTodos }: TodoBoxProps) {
 
     const detailProps = {
         label: "詳細",
-        id: todo.id,
+        id: todo.originId,
         value: todo.detail,
         validation: todoUpdateDetailValidationForClient,
         update: updateTodoDetail,
@@ -32,14 +32,14 @@ export function TodoBox({ todo, todos, setTodos }: TodoBoxProps) {
 
     const deadlineProps = {
         label: "期日",
-        id: todo.id,
+        id: todo.originId,
         value: todo.deadline,
         update: updateTodoDeadline,
     };
 
     const isDoneProps = {
         label: "完了",
-        id: todo.id,
+        id: todo.originId,
         value: todo.isDone,
         validation: todoUpdateIsDoneValidationForClient,
         update: updateTodoIsDone,
@@ -56,11 +56,13 @@ export function TodoBox({ todo, todos, setTodos }: TodoBoxProps) {
         if (!confirm("本当に削除しますか？")) {
             return;
         }
-        deleteTodo(todo.id)
+        deleteTodo(todo.originId)
             .then(() => {
-                const ownId = todo.id;
-                const newTodos = todos.filter(todo => todo.id !== ownId);
-                setTodos(newTodos);
+                setTodos(prevTodos => {
+                    const ownId = todo.id;
+                    const newTodos = prevTodos.filter(todo => todo.id !== ownId);
+                    return newTodos;
+                });
             });
     }
 

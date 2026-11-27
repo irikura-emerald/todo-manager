@@ -1,29 +1,28 @@
-import { deleteTodoList, TodoList, updateTodoListName } from "@/lib/todolist-control";
+import { deleteTodoList, updateTodoListName } from "@/lib/todolist-control";
 import { TodoBox } from "./TodoBox";
 import { Button, TextField } from "@mui/material";
 import { todoListUpdateValidationForClient } from "@/validation/todolist-validation";
-import { useState } from "react";
-import { createTodo, moveTodo, Todo } from "@/lib/todo-control";
-import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { createTodo } from "@/lib/todo-control";
+import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { todoCreateValidationForClient } from "@/validation/todo-validation";
-import { closestCenter, DndContext, DragEndEvent } from "@dnd-kit/core";
 import SimpleTextForm from "./simple-form/SimpleTextForm";
+import { addPrefixToTodoId, createSetTodos, PrefixedTodoList } from "@/lib/todolists-state-util";
 
 type TodoListBoxProps = {
-    todoList: TodoList,
-    todoLists: TodoList[],
-    setTodoLists: (todoLists: TodoList[]) => void,
+    todoList: PrefixedTodoList,
+    setPrefixedTodoLists: (getNewTodoLists: ((prevTodoLists: PrefixedTodoList[]) => PrefixedTodoList[])) => void,
 };
-export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoListBoxProps) {
-    const [todos, setTodos] = useState<Todo[]>(todoList.todos);
+export default function TodoListBox({ todoList, setPrefixedTodoLists: setTodoLists }: TodoListBoxProps) {
+    const todos = todoList.todos;
+    const setTodos = createSetTodos({ setTodoLists, todoListId: todoList.id });
 
     const simpleFormProps = {
         label: "リスト名",
         type: "text",
-        id: todoList.id,
+        id: todoList.originId,
         value: todoList.name,
         validation: todoListUpdateValidationForClient,
         update: updateTodoListName,
@@ -40,11 +39,13 @@ export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoL
         if (!confirm("本当に削除しますか？")) {
             return;
         }
-        deleteTodoList(todoList.id)
+        deleteTodoList(todoList.originId)
             .then(() => {
-                const ownId = todoList.id;
-                const newTodoLists = todoLists.filter(todoList => todoList.id !== ownId);
-                setTodoLists(newTodoLists);
+                setTodoLists(prevTodoLists => {
+                    const ownId = todoList.id;
+                    const newTodoLists = prevTodoLists.filter(prevTodoList => prevTodoList.id !== ownId);
+                    return newTodoLists;
+                });
             });
     }
 
@@ -53,9 +54,10 @@ export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoL
     });
 
     function handleCreateTodo({ name }: { name: string }) {
-        createTodo({ todoListId: todoList.id, name })
+        createTodo({ todoListId: todoList.originId, name })
             .then(newTodo => {
-                setTodos([...todos, newTodo]);
+                const newPrefixedTodo = addPrefixToTodoId(newTodo);
+                setTodos(prevTodos => [...prevTodos, newPrefixedTodo]);
             });
         reset({ name: "" });
     }
@@ -67,28 +69,6 @@ export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoL
         helperText: errors.name?.message,
     };
 
-    function handleDragEnd({ active, over }: DragEndEvent) {
-        if (!over || active.id === over.id) {
-            return;
-        }
-
-        const idFrom = active.id as number;
-        const idTo = over.id as number;
-        moveTodo(idFrom, idTo);
-
-        // console.log({ from: idFrom, to: idTo, todos });
-        setTodos((todos) => {
-            const indexFrom = todos.findIndex(todo => todo.id == idFrom);
-            const indexTo = todos.findIndex(todo => todo.id == idTo);
-            if (indexFrom == -1 || indexTo == -1) {
-                return todos;
-            }
-
-            const movedTodos = arrayMove(todos, indexFrom, indexTo);
-            return movedTodos;
-        });
-    }
-
     return (
         <div ref={setNodeRef} style={style} className="min-w-80">
             <div {...attributes} {...listeners} className="h-2 border-y-2 mx-4 my-2"></div>
@@ -97,17 +77,15 @@ export default function TodoListBox({ todoList, todoLists, setTodoLists }: TodoL
                 <Button onClick={handleDelete} variant="outlined" className="w-13">削除</Button>
             </div>
             <div>
-                <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                    <SortableContext items={todos} strategy={verticalListSortingStrategy}>
-                        {todos.map(todo => {
-                            return (
-                                <TodoBox key={todo.id} {...{ todo, todos, setTodos }} />
-                            );
-                        })}
-                    </SortableContext>
-                </DndContext>
+                <SortableContext id={todoList.id.toString()} items={todos} strategy={verticalListSortingStrategy}>
+                    {todos.map(todo => {
+                        return (
+                            <TodoBox key={todo.id} {...{ todo, setTodos }} />
+                        );
+                    })}
+                </SortableContext>
                 <form onSubmit={handleSubmit(handleCreateTodo)}>
-                    <input type="hidden" value={todoList.id} {...register("todoListId")} />
+                    <input type="hidden" value={todoList.originId} {...register("todoListId")} />
                     <div className="flex justify-evenly items-center">
                         <TextField margin="normal" {...todoNameAttributes} />
                         <Button variant="outlined" type="submit" disabled={isSubmitting} className="w-13">作成</Button>
